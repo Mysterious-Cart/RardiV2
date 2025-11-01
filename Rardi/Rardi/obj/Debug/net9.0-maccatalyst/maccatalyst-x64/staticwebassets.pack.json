@@ -1,0 +1,37 @@
+{
+  "Files": [
+    {
+      "Id": "F:\\Projects\\RardiV2\\Rardi\\Rardi\\obj\\Debug\\net9.0-maccatalyst\\maccatalyst-x64\\scopedcss\\bundle\\Rardi.styles.css",
+      "PackagePath": "staticwebassets\\Rardi.styles.css"
+    },
+    {
+      "Id": "F:\\Projects\\RardiV2\\Rardi\\Rardi\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "F:\\Projects\\RardiV2\\Rardi\\Rardi\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-maccatalyst\\maccatalyst-x64\\staticwebassets\\msbuild.Rardi.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-maccatalyst\\maccatalyst-x64\\staticwebassets\\msbuild.Rardi.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-maccatalyst\\maccatalyst-x64\\staticwebassets\\msbuild.build.Rardi.props",
+      "PackagePath": "build\\Rardi.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-maccatalyst\\maccatalyst-x64\\staticwebassets\\msbuild.buildMultiTargeting.Rardi.props",
+      "PackagePath": "buildMultiTargeting\\Rardi.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-maccatalyst\\maccatalyst-x64\\staticwebassets\\msbuild.buildTransitive.Rardi.props",
+      "PackagePath": "buildTransitive\\Rardi.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

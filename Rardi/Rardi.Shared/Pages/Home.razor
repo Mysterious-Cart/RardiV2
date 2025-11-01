@@ -1,0 +1,74 @@
+﻿@page "/"
+@using Rardi.Shared.Services
+@inject IFormFactor FormFactor
+@inject AppService AppService
+
+<PageTitle>Home - Rardi</PageTitle>
+
+<div class="hero-section bg-primary text-white p-5 mb-4 rounded">
+    <div class="container">
+        <h1 class="display-4">Welcome to Rardi</h1>
+        <p class="lead">Your comprehensive business management solution</p>
+        <p class="mb-0">Running on <em>@factor</em> using <em>@platform</em></p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Products</h5>
+                    <p class="card-text">Manage your product inventory and catalog.</p>
+                    <a href="/product-dashboard" class="btn btn-primary">Go to Products</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Customers</h5>
+                    <p class="card-text">Manage customer information and relationships.</p>
+                    <a href="/customers" class="btn btn-primary">Go to Customers</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Orders</h5>
+                    <p class="card-text">Process and track customer orders.</p>
+                    <a href="/orders" class="btn btn-primary">Go to Orders</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>Example Features</h3>
+            <p>Try these pages to see the dynamic app bar in action:</p>
+            <ul>
+                <li><a href="/example">Example Page</a> - Shows custom app bar controls</li>
+                <li><a href="/products">Products Page</a> - Shows action buttons in app bar</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string factor => FormFactor.GetFormFactor().ToString();
+    private string platform => FormFactor.GetPlatform();
+
+    protected override void OnInitialized()
+    {
+        // Set home page information
+        AppService.SetPageInfo("Dashboard", "/");
+        
+        // Clear any custom app bar content
+        AppService.SetAppBarContent(null);
+        
+        // Disable back button on home page
+        AppService.SetBackButton(false);
+    }
+}

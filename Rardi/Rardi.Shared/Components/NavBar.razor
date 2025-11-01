@@ -1,0 +1,45 @@
+﻿@namespace Rardi.Shared.Components
+@using Rardi.Shared.Components.NavBarDevices
+@inject IFormFactor formFactor;
+
+@if (currentDevice is DevicePlateform.Desktop or DevicePlateform.Web or DevicePlateform.WebAssembly)
+{
+    <NavBar_Web>
+        <Links>
+            <MudNavLink Match="NavLinkMatch.All" Href="/" Icon="@Icons.Material.Filled.LibraryBooks">Main</MudNavLink>
+            <MudNavGroup Title="Products" Icon="@Icons.Material.Filled.Inventory">
+                <MudNavLink Match="NavLinkMatch.All" Href="/product-dashboard" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+                <MudNavLink Match="NavLinkMatch.All" Href="/product/list" Icon="@Icons.Material.Filled.List">Product List</MudNavLink>
+            </MudNavGroup>
+        </Links>
+    </NavBar_Web>
+}
+else if (currentDevice is DevicePlateform.Mobile or DevicePlateform.Tablet)
+{
+    <NavBar_Mobile />
+}
+
+
+
+
+
+@code {
+
+    private DevicePlateform currentDevice = DevicePlateform.Unknown;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (formFactor is null)
+        {
+            throw new ArgumentNullException(nameof(formFactor), "Service not found");
+        }
+     
+        currentDevice = formFactor.GetFormFactor();
+        if(currentDevice == DevicePlateform.Unknown)
+        {
+            throw new ArgumentException("Unable to detect device platform or unsupported device", nameof(currentDevice));
+        }
+
+    }
+}

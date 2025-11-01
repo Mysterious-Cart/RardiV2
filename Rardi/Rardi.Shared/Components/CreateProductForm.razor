@@ -1,0 +1,46 @@
+@namespace Rardi.Shared.Components
+@inject IDialogService DialogService;
+<MudDialog Class="pa-4 ma-4">
+    <DialogContent>
+        <MudForm @ref="form" Validated="OnValidated">
+            <MudTextField T="string" Label="Product Name" @bind-Value="product.Name" Required="true" RequiredError="Product Name is required." Class="mb-4" />
+            <MudTextField T="string" Label="Description" @bind-Value="product.Description" Class="mb-4" />
+            <MudTextField T="decimal?" Label="Price" @bind-Value="product.Price" Required="true" RequiredError="Price is required." Class="mb-4" />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Create Product</MudButton>
+        </MudForm>
+    </DialogContent>
+</MudDialog>
+@code{
+    private MudForm? form;
+    private ProductModel product = new();
+    
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    private async Task SubmitForm()
+    {
+        if (form is not null)
+        {
+            await form.Validate();
+        }
+    }
+
+    private async Task OnValidated()
+    {
+        if (form is not null && form.IsValid)
+        {
+            // Handle product creation logic here
+            Console.WriteLine($"Product Created: {product.Name}, {product.Description}, {product.Price}");
+            // Reset form
+            product = new();
+            await  form.ResetAsync();
+        }
+    }
+
+    public class ProductModel
+    {
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public decimal? Price { get; set; }
+    }
+}

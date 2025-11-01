@@ -1,0 +1,4 @@
+wwwroot\app.css
+wwwroot\index.html
+F:\Projects\RardiV2\Rardi\Rardi\wwwroot\app.css
+F:\Projects\RardiV2\Rardi\Rardi\wwwroot\index.html

@@ -1,0 +1,25 @@
+<mxfile host="65bd71144e">
+    <diagram id="tDMbPmlHj32njeolfTC1" name="Page-1">
+        <mxGraphModel dx="897" dy="724" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" adaptiveColors="auto">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="9" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="5" target="6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="erDiagram&#xa;    PRODUCT||--|{ PRODUCTPFP : contains&#xa;    PRODUCTPFP||--|| SUPPLIER : has&#xa;    PRODUCTPFP||--|| LOCATION: has&#xa;    PRODUCTPFP||--|| SUPPLIER : has&#xa;    PRODUCTPFP||--o{ ORDER : has" style="shadow=0;dashed=0;align=left;strokeWidth=1;shape=mxgraph.mermaid.abstract.mermaid;labelBackgroundColor=#ffffff;noLabel=1;theme=default;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="180" width="400" height="500" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="classDiagram&#xa;Class01 &lt;|-- AveryLongClass : Cool&#xa;Class03 *-- Class04&#xa;Class05 o-- Class06&#xa;Class07 .. Class08&#xa;Class09 --&gt; C2 : Where am i?&#xa;Class09 --* C3&#xa;Class09 --|&gt; Class07&#xa;Class07 : equals()&#xa;Class07 : Object[] elementData&#xa;Class01 : size()&#xa;Class01 : int chimp&#xa;Class01 : int gorilla&#xa;Class08 &lt;--&gt; C2: Cool label" style="shadow=0;dashed=0;align=left;strokeWidth=1;shape=mxgraph.mermaid.abstract.mermaid;labelBackgroundColor=#ffffff;noLabel=1;theme=default;" vertex="1" parent="1">
+                    <mxGeometry x="570" y="250" width="400" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="stateDiagram&#xa;    [*] --&gt; ORDER&#xa;    ORDER--&gt; SELECTPFP&#xa;    SELECTPFP --&gt; CREATEORDER&#xa;    CREATEORDER --&gt; SELECTAMOUNT&#xa;    &#xa;&#xa;    Still --&gt; Moving&#xa;    Moving --&gt; Still&#xa;    Moving --&gt; Crash&#xa;    Crash --&gt; [*]" style="shadow=0;dashed=0;align=left;strokeWidth=1;shape=mxgraph.mermaid.abstract.mermaid;labelBackgroundColor=#ffffff;noLabel=1;theme=default;" vertex="1" parent="1">
+                    <mxGeometry x="640" y="600" width="100" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;PRODUCT&lt;/h1&gt;&lt;div&gt;One product enitiy (Physical Object) can have many profiles, where each profile have import price, location of warehouse, export price, and stock.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="20" y="230" width="180" height="180" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

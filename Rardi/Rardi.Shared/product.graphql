@@ -1,0 +1,11 @@
+query GetProduct {
+  product {
+    nodes {
+      description
+      id
+      name
+      stock
+    }
+    
+  }
+}

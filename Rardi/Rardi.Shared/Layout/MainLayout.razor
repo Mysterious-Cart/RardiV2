@@ -1,0 +1,119 @@
+﻿@inherits LayoutComponentBase
+@namespace Rardi.Shared.Layout
+@inject AppService appService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+@* Required *@
+<MudThemeProvider IsDarkMode=true />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="Icons.Material.Filled.Menu" 
+                      Color="Color.Inherit" 
+                      Edge="Edge.Start" 
+                      OnClick="@((e) => DrawerToggle())" />
+        
+        @if (appService.ShowBackButton)
+        {
+            <MudIconButton Icon="Icons.Material.Filled.ArrowBack" 
+                          Color="Color.Inherit" 
+                          OnClick="@(() => appService.BackButtonAction?.Invoke())" />
+        }
+        
+        <MudText Typo="Typo.h6" Class="ml-3">@appService.CurrentPageTitle</MudText>
+        
+        @if (appService.Breadcrumbs.Any())
+        {
+            <MudBreadcrumbs Items="@GetBreadcrumbItems()" Class="ml-4">
+                <SeparatorTemplate>
+                    <MudIcon Icon="Icons.Material.Filled.NavigateNext" Size="Size.Small" />
+                </SeparatorTemplate>
+            </MudBreadcrumbs>
+        }
+        
+        <MudSpacer />
+        
+        @* Custom app bar content for specific pages *@
+        @if (appService.AppBarContent != null)
+        {
+            @appService.AppBarContent
+        }
+        
+        @* Default app bar actions *@
+        <MudIconButton Icon="Icons.Material.Filled.Notifications" Color="Color.Inherit" />
+        <MudIconButton Icon="Icons.Material.Filled.AccountCircle" Color="Color.Inherit" />
+    </MudAppBar>
+    
+    <MudDrawer style="overflow:hidden" @bind-Open="drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <NavBar />
+    </MudDrawer>
+    
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+@code {
+    private bool drawerOpen = true;
+
+    protected override void OnInitialized()
+    {
+        appService.StateChanged += OnAppServiceStateChanged;
+        Navigation.LocationChanged += OnLocationChanged;
+        
+        // Set initial page info
+        appService.UpdateFromUrl(Navigation.Uri);
+    }
+
+    private void OnAppServiceStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        var uri = new Uri(e.Location);
+        appService.UpdateFromUrl(uri.AbsolutePath);
+    }
+
+    private void DrawerToggle()
+    {
+        drawerOpen = !drawerOpen;
+    }
+
+    private List<MudBlazor.BreadcrumbItem> GetBreadcrumbItems()
+    {
+        return appService.Breadcrumbs.Select(b => new MudBlazor.BreadcrumbItem(
+            b.Text, 
+            b.Url, 
+            !b.IsClickable,
+            b.IsClickable ? Icons.Material.Filled.NavigateNext : null
+        )).ToList();
+    }
+
+    public void Dispose()
+    {
+        appService.StateChanged -= OnAppServiceStateChanged;
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+}
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>

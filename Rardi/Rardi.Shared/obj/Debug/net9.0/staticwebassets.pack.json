@@ -1,0 +1,45 @@
+{
+  "Files": [
+    {
+      "Id": "F:\\Projects\\RardiV2\\rardi\\Rardi.Shared\\obj\\Debug\\net9.0\\scopedcss\\projectbundle\\Rardi.Shared.bundle.scp.css",
+      "PackagePath": "staticwebassets\\Rardi.Shared.5ndxwgt9bt.bundle.scp.css"
+    },
+    {
+      "Id": "F:\\Projects\\RardiV2\\rardi\\Rardi.Shared\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "F:\\Projects\\RardiV2\\rardi\\Rardi.Shared\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "F:\\Projects\\RardiV2\\rardi\\Rardi.Shared\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "F:\\Projects\\RardiV2\\rardi\\Rardi.Shared\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.Rardi.Shared.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.Rardi.Shared.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.Rardi.Shared.props",
+      "PackagePath": "build\\Rardi.Shared.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.Rardi.Shared.props",
+      "PackagePath": "buildMultiTargeting\\Rardi.Shared.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.Rardi.Shared.props",
+      "PackagePath": "buildTransitive\\Rardi.Shared.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

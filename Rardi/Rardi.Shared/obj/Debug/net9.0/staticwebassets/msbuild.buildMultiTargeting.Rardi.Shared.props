@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Rardi.Shared.props" />
+</Project>

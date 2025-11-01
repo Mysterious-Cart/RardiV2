@@ -1,0 +1,140 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "F:\\Projects\\RardiV2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C27C864A-F7E9-4A25-9CC3-AE4E376CEF3A}|Rardi\\Rardi.Shared\\Rardi.Shared.csproj|f:\\projects\\rardiv2\\rardi\\rardi.shared\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{C27C864A-F7E9-4A25-9CC3-AE4E376CEF3A}|Rardi\\Rardi.Shared\\Rardi.Shared.csproj|solutionrelative:rardi\\rardi.shared\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C27C864A-F7E9-4A25-9CC3-AE4E376CEF3A}|Rardi\\Rardi.Shared\\Rardi.Shared.csproj|f:\\projects\\rardiv2\\rardi\\rardi.shared\\components\\navbardevices\\navbar.web.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{C27C864A-F7E9-4A25-9CC3-AE4E376CEF3A}|Rardi\\Rardi.Shared\\Rardi.Shared.csproj|solutionrelative:rardi\\rardi.shared\\components\\navbardevices\\navbar.web.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C27C864A-F7E9-4A25-9CC3-AE4E376CEF3A}|Rardi\\Rardi.Shared\\Rardi.Shared.csproj|f:\\projects\\rardiv2\\rardi\\rardi.shared\\components\\navbardevices\\navbar.mobile.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{C27C864A-F7E9-4A25-9CC3-AE4E376CEF3A}|Rardi\\Rardi.Shared\\Rardi.Shared.csproj|solutionrelative:rardi\\rardi.shared\\components\\navbardevices\\navbar.mobile.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C27C864A-F7E9-4A25-9CC3-AE4E376CEF3A}|Rardi\\Rardi.Shared\\Rardi.Shared.csproj|f:\\projects\\rardiv2\\rardi\\rardi.shared\\components\\navbar.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{C27C864A-F7E9-4A25-9CC3-AE4E376CEF3A}|Rardi\\Rardi.Shared\\Rardi.Shared.csproj|solutionrelative:rardi\\rardi.shared\\components\\navbar.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C27C864A-F7E9-4A25-9CC3-AE4E376CEF3A}|Rardi\\Rardi.Shared\\Rardi.Shared.csproj|f:\\projects\\rardiv2\\rardi\\rardi.shared\\pages\\productdashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{C27C864A-F7E9-4A25-9CC3-AE4E376CEF3A}|Rardi\\Rardi.Shared\\Rardi.Shared.csproj|solutionrelative:rardi\\rardi.shared\\pages\\productdashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C13D8C7A-472A-47CD-B1B8-B85D2C74869F}|Rardi\\Rardi.Web.Client\\Rardi.Web.Client.csproj|f:\\projects\\rardiv2\\rardi\\rardi.web.client\\rardi.web.client.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{C13D8C7A-472A-47CD-B1B8-B85D2C74869F}|Rardi\\Rardi.Web.Client\\Rardi.Web.Client.csproj|solutionrelative:rardi\\rardi.web.client\\rardi.web.client.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{971D2C1D-13FA-4932-9E00-72D944A9FAAB}|Rardi\\Rardi.Web\\Rardi.Web.csproj|f:\\projects\\rardiv2\\rardi\\rardi.web\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{971D2C1D-13FA-4932-9E00-72D944A9FAAB}|Rardi\\Rardi.Web\\Rardi.Web.csproj|solutionrelative:rardi\\rardi.web\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ProductDashboard.razor",
+              "DocumentMoniker": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\Pages\\ProductDashboard.razor",
+              "RelativeDocumentMoniker": "Rardi\\Rardi.Shared\\Pages\\ProductDashboard.razor",
+              "ToolTip": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\Pages\\ProductDashboard.razor",
+              "RelativeToolTip": "Rardi\\Rardi.Shared\\Pages\\ProductDashboard.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-26T05:19:30.14Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "Rardi\\Rardi.Shared\\Layout\\MainLayout.razor",
+              "ToolTip": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "Rardi\\Rardi.Shared\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-26T16:36:46.217Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Rardi.Web.Client",
+              "DocumentMoniker": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Web.Client\\Rardi.Web.Client.csproj",
+              "RelativeDocumentMoniker": "Rardi\\Rardi.Web.Client\\Rardi.Web.Client.csproj",
+              "ToolTip": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Web.Client\\Rardi.Web.Client.csproj",
+              "RelativeToolTip": "Rardi\\Rardi.Web.Client\\Rardi.Web.Client.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-26T16:19:03.878Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NavBar.razor",
+              "DocumentMoniker": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\Components\\NavBar.razor",
+              "RelativeDocumentMoniker": "Rardi\\Rardi.Shared\\Components\\NavBar.razor",
+              "ToolTip": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\Components\\NavBar.razor",
+              "RelativeToolTip": "Rardi\\Rardi.Shared\\Components\\NavBar.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-26T14:44:21.334Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NavBar.Web.razor",
+              "DocumentMoniker": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\Components\\NavBarDevices\\NavBar.Web.razor",
+              "RelativeDocumentMoniker": "Rardi\\Rardi.Shared\\Components\\NavBarDevices\\NavBar.Web.razor",
+              "ToolTip": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\Components\\NavBarDevices\\NavBar.Web.razor*",
+              "RelativeToolTip": "Rardi\\Rardi.Shared\\Components\\NavBarDevices\\NavBar.Web.razor*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-26T15:33:04.093Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NavBar.Mobile.razor",
+              "DocumentMoniker": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\Components\\NavBarDevices\\NavBar.Mobile.razor",
+              "RelativeDocumentMoniker": "Rardi\\Rardi.Shared\\Components\\NavBarDevices\\NavBar.Mobile.razor",
+              "ToolTip": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\Components\\NavBarDevices\\NavBar.Mobile.razor",
+              "RelativeToolTip": "Rardi\\Rardi.Shared\\Components\\NavBarDevices\\NavBar.Mobile.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-26T15:32:48.918Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "App.razor",
+              "DocumentMoniker": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Web\\Components\\App.razor",
+              "RelativeDocumentMoniker": "Rardi\\Rardi.Web\\Components\\App.razor",
+              "ToolTip": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Web\\Components\\App.razor",
+              "RelativeToolTip": "Rardi\\Rardi.Web\\Components\\App.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-26T12:10:58.951Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
