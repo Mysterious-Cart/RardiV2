@@ -9,17 +9,29 @@ namespace Inventory.Data;
 [Table("Products")]
 public partial class ProductEntity
 {
-    public Guid Id { get; set; }
-
+    public Guid Id { get; set; } = Guid.NewGuid();
+    
+    /// <summary>
+    /// The name of the product. Can be in Khmer, English, or Mixed.
+    /// </summary>
     [Required]
     public string Name { get; set; } = null!;
 
-    // Easier searching and duplicate checking
+    /// <summary>
+    /// Mixed Language processed Name. Easier searching and duplicate checking
+    /// </summary>
     public string NormalizedName { get; set; } = null!;
 
-    public string Description { get; set; } = null!;
+    /// <summary>
+    /// English only processed Name. Easier searching and duplicate checking
+    /// </summary>
+    public string EnglishNormalizedName { get; set; } = null!;
 
-    // Total stock across all Profiles
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Total stock across all Profiles
+    /// </summary>
     public int TotalStock { get; set; }
 
     public DateTime CreatedAt { get; set; }

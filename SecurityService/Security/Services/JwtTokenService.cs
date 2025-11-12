@@ -85,14 +85,19 @@ public class JwtTokenService
             new(JwtRegisteredClaimNames.Aud, JwtSettings["Audience"]!),
             new(JwtRegisteredClaimNames.Exp, unixTimeSecondsForExp.ToString(), ClaimValueTypes.Integer64),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new("location", user.LocationId.ToString(), ClaimValueTypes.String),
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName!),
-        };
 
-        foreach (var role in roles) 
+        };
+        if(roles is not null && roles.Count > 0)
         {
-            claims.Add(new Claim(ClaimTypes.Role, role));
+            foreach (var role in roles) 
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
         }
+        
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -109,7 +114,6 @@ public class JwtTokenService
         var token = _tokenHandler.CreateToken(tokenDescriptor);
         var tokenString = _tokenHandler.WriteToken(token);
     
-        Console.WriteLine($"Generated token with KeyId: {key.KeyId}");
         return tokenString;
     }
 

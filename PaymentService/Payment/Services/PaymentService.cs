@@ -1,5 +1,6 @@
 namespace Payment.Services;
 
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Payment.Asset.ForeignEntity;
 using Payment.Data;
@@ -20,13 +21,7 @@ public class PaymentService
         var transaction = await _context.Transactions
             .Include(i => i.PaymentInfos)
             .ThenInclude(pi => pi.PaymentType)
-            .Select(transaction => new Transaction(
-                transaction.Id,
-                transaction.Total,
-                transaction.CreatedAt,
-                transaction.PaymentInfos.ToList(),
-                transaction.Items.ToList()
-            ))
+            .ProjectToType<Transaction>()
             .FirstOrDefaultAsync(t => t.Id == id) ?? throw new ArgumentException("Transaction not found");
         return transaction;
     }
@@ -39,7 +34,7 @@ public class PaymentService
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             Total = customerCart.Total,
-            CustomerId = customerCart.Id,
+            CartID = customerCart.Id,
             Description = Description,
             TransactBy = customerCart.CreatedBy
         };
@@ -47,5 +42,5 @@ public class PaymentService
     
 }
 
-public record TransactionOverview(Guid Id, decimal Total, DateTime CreatedAt, CustomerSnapshot CustomerDetail);
+public record TransactionOverview(Guid Id, decimal Total, DateTime CreatedAt);
 public record Transaction(Guid Id, decimal Total, DateTime CreatedAt, List<PaymentInfo> PaymentInfos, List<TransactionItem> Items);

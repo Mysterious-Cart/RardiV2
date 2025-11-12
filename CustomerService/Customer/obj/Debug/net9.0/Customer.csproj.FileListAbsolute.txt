@@ -182,3 +182,6 @@ f:\Projects\RardiV2\CustomerService\Customer\obj\Debug\net9.0\refint\Customer.dl
 f:\Projects\RardiV2\CustomerService\Customer\obj\Debug\net9.0\Customer.pdb
 f:\Projects\RardiV2\CustomerService\Customer\obj\Debug\net9.0\Customer.genruntimeconfig.cache
 f:\Projects\RardiV2\CustomerService\Customer\obj\Debug\net9.0\ref\Customer.dll
+F:\Projects\RardiV2\customerservice\customer\obj\Debug\net9.0\Customer.sourcelink.json
+F:\Projects\RardiV2\customerservice\customer\bin\Debug\net9.0\Mapster.dll
+F:\Projects\RardiV2\customerservice\customer\bin\Debug\net9.0\Mapster.Core.dll

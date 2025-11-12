@@ -18,36 +18,10 @@ namespace Payment.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Payment")
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Payment.Data.CustomerSnapshot", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PlateNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CustomerSnapshot", "Payment");
-                });
 
             modelBuilder.Entity("Payment.Data.PaymentInfo", b =>
                 {
@@ -88,45 +62,17 @@ namespace Payment.Migrations
                     b.ToTable("PaymentTypes", "Payment");
                 });
 
-            modelBuilder.Entity("Payment.Data.ProductSnapShot", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductSnapShots", "Payment");
-                });
-
             modelBuilder.Entity("Payment.Data.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CartID")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("CustomerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CustomerSnapshotId")
-                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -140,6 +86,10 @@ namespace Payment.Migrations
                     b.Property<Guid?>("PaymentTypeId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("PlateNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<decimal>("Total")
                         .HasColumnType("numeric");
 
@@ -147,8 +97,6 @@ namespace Payment.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("PaymentTypeId");
 
@@ -174,12 +122,13 @@ namespace Payment.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
+                    b.Property<decimal>("Total")
+                        .HasColumnType("numeric");
+
                     b.Property<Guid>("TransactionId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.HasIndex("TransactionId");
 
@@ -203,32 +152,18 @@ namespace Payment.Migrations
 
             modelBuilder.Entity("Payment.Data.Transaction", b =>
                 {
-                    b.HasOne("Payment.Data.CustomerSnapshot", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
-
                     b.HasOne("Payment.Data.PaymentType", null)
                         .WithMany("Transactions")
                         .HasForeignKey("PaymentTypeId");
-
-                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Payment.Data.TransactionItem", b =>
                 {
-                    b.HasOne("Payment.Data.ProductSnapShot", "Product")
-                        .WithMany("TransactionItems")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Payment.Data.Transaction", "Transaction")
                         .WithMany("Items")
                         .HasForeignKey("TransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
 
                     b.Navigation("Transaction");
                 });
@@ -236,11 +171,6 @@ namespace Payment.Migrations
             modelBuilder.Entity("Payment.Data.PaymentType", b =>
                 {
                     b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("Payment.Data.ProductSnapShot", b =>
-                {
-                    b.Navigation("TransactionItems");
                 });
 
             modelBuilder.Entity("Payment.Data.Transaction", b =>

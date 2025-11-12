@@ -9,7 +9,7 @@ public partial class Category
     [Required]
     public string Name { get; set; } = null!;
 
-    public string Description { get; set; } = null!;
+    public string? Description { get; set; }
 
     public ICollection<ProductEntity> Products { get; set; } = [];
 }

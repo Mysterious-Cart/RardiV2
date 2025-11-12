@@ -1,138 +1,107 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Security.Cryptography;
 using Inventory.Data;
 using Inventory.Services;
-using Npgsql;
+using Amazon.SecretsManager;
+using Amazon.SecretsManager.Model;
+using Amazon;
+using Inventory.Assets.ServiceConfig;
+using Inventory.Assets.Interface;
+using Amazon.RDS;
+using Amazon.RDS.Model;
+using Mapster;
+using System.Text.Json.Nodes;
+using Newtonsoft.Json.Linq;
+
 
 var builder = WebApplication.CreateBuilder(args);
+TypeAdapterConfig.GlobalSettings.EnableJsonMapping();
+
+#region Retrieve Secrets from AWS Secrets Manager
+
+string ConnectionString = string.Empty;
+RSAKeyPair rsaKeyPair = new(string.Empty, string.Empty);
+#if !DEBUG
 try
 {
+    const string Database = "Inventory";
+    const string DBrequestSecretID = "rds!db-e38144f7-465c-40f0-920f-284cab0bec81";
+    const string DBInstanceDescribe = "rardi-inventory-db";
+    const string KeyrequestSecretID = "dev/rardi";
+
+    AmazonSecretsManagerClient client = new(RegionEndpoint.APSoutheast1);
+    AmazonRDSClient rdsClient = new(RegionEndpoint.APSoutheast1);
+    GetSecretValueRequest DBrequest = new() { SecretId = DBrequestSecretID };
+    GetSecretValueRequest Keyrequest = new() { SecretId = KeyrequestSecretID };
+
+    var DBSecretKeyResponse = await client.GetSecretValueAsync(DBrequest);
+    
+    var dbConfig = JObject.Parse(DBSecretKeyResponse.SecretString).Adapt<DatabaseConfig>();
+    dbConfig.Database = Database;
+    // Get RDS endpoint dynamically
+    var rdsResponse = await rdsClient.DescribeDBInstancesAsync(new DescribeDBInstancesRequest
+    {
+        DBInstanceIdentifier = DBInstanceDescribe
+
+    });
+
+    var endpoint = rdsResponse.DBInstances[0].Endpoint;
+
+    ConnectionString = $"Host={endpoint.Address};Port={endpoint.Port};Database={dbConfig.Database};Username={dbConfig.Username};Password={dbConfig.Password};SSL Mode=Require;";
+
+    var SecreteKeyResponse = await client.GetSecretValueAsync(Keyrequest);
+    rsaKeyPair = JObject.Parse(SecreteKeyResponse.SecretString).Adapt<RSAKeyPair>();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error retrieving secrets: {ex.Message}");
+    throw;
+}
+#endif
+#endregion
+
+#region Configure DbContext
+try
+{
+#if DEBUG
     builder.Services.AddDbContextFactory<InventoryContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
     );
-}catch
+#else
+    builder.Services.AddDbContextFactory<InventoryContext>(async options =>
+    {
+        options.UseNpgsql(ConnectionString);
+    });
+#endif
+
+}
+catch
 {
-    Console.WriteLine($"Fail to connect to database.");
+    Console.WriteLine($"DB Setup error");
     throw;
 }
+#endregion
 
+
+#region Application Service
 builder.Services.AddLogging(config =>
 {
     config.AddConsole();
     config.AddDebug();
 });
 
-
-var _rsa = RSA.Create();
-_rsa.ImportFromPem(builder.Configuration["JwtSettings:PublicKey"]!.ToCharArray());
-var key = new RsaSecurityKey(_rsa);
-
-builder.Services
-    .AddAuthorization()
-    .AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddCookie(IdentityConstants.ApplicationScheme)
-    .AddCookie(IdentityConstants.ExternalScheme)
-    .AddCookie(IdentityConstants.TwoFactorUserIdScheme)
-    .AddJwtBearer(options =>
-    {
-
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            TryAllIssuerSigningKeys = true,
-            IssuerSigningKey = key,
-            ClockSkew = TimeSpan.FromMinutes(1),
-            AuthenticationType = "JWT",
-
-        };
-        options.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
-            {
-                Console.WriteLine($"JWT Message Received:");
-                Console.WriteLine($"  Authorization Header: {context.Request.Headers["Authorization"]}");
-
-                // Check for token in different locations
-                if (string.IsNullOrEmpty(context.Token))
-                {
-                    var authHeader = context.Request.Headers.Authorization.FirstOrDefault();
-                    if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
-                    {
-                        context.Token = authHeader.Substring("Bearer ".Length).Trim();
-                        Console.WriteLine($"  Token extracted from Authorization header");
-                    }
-                }
-
-                return Task.CompletedTask;
-            },
-
-            OnAuthenticationFailed = context =>
-            {
-                // When authentication fails forward to API to show request token expiration or failure
-                Console.WriteLine($"Authentication failed: {context.Exception.Message}");
-                return Task.CompletedTask;
-            },
-
-            OnTokenValidated = context =>
-            {
-                Console.WriteLine($"Token validated for user: {context.Principal?.Identity?.Name}");
-                return Task.CompletedTask;
-            }
-
-        };
-    });
-    
-builder.Services.AddScoped<InventoryManagementService>();
-
-builder.Services
-    .AddGraphQLServer()
-    .AddApolloFederation()
-    .AddQueryType<Inventory.Graphql.Query>()
-    .AddMutationType<Inventory.Graphql.Mutation>()
-    .AddSubscriptionType<Inventory.Graphql.Subscription>()
-    .AddPostgresSubscriptions((sp, option) => {
-        option.ConnectionFactory = ct =>
-        {
-            var Npgsqlbuilder = new NpgsqlDataSourceBuilder(  
-                builder.Configuration.GetConnectionString("DefaultConnection")
-            );
-
-            // we do not need pooling for long running connections
-            Npgsqlbuilder.ConnectionStringBuilder.Pooling = false;
-            // we set the keep alive to 30 seconds
-            Npgsqlbuilder.ConnectionStringBuilder.KeepAlive = 30;
-            // as these tasks often run in the background we do not want to enlist them so they do not
-            // interfere with the main transaction
-            Npgsqlbuilder.ConnectionStringBuilder.Enlist = false;
-
-            var dataSource = Npgsqlbuilder.Build();
-
-            return dataSource.OpenConnectionAsync(ct);
-        }
-        
-        ;
-    })
-    .AddProjections()
-    .AddFiltering()
-    .AddSorting()
-    .AddAuthorization()
-    .InitializeOnStartup()
-    .ModifyRequestOptions(
-        o => o.IncludeExceptionDetails =
-            builder.Environment.IsDevelopment());
-
+builder.Services.AddScoped<IInventoryManagementService, InventoryManagementService>();
+builder.Services.AddScoped<IOrderManagementService, OrderManagementService>();
+builder.Services.AddHealthChecks();
+#if !DEBUG
+builder.Services.AddSecurityConfiguration(builder.Configuration, rsaKeyPair);
+#else
+builder.Services.AddSecurityConfiguration(builder.Configuration, new RSAKeyPair(
+    builder.Configuration["JwtSettings:PublicKey"]!,
+    builder.Configuration["JwtSettings:PrivateKey"]!));
+#endif
+builder.Services.AddHotChocolateConfiguration(builder);
+#endregion
 
 
 builder.Services.AddControllers();
@@ -143,10 +112,20 @@ try
 {
     var context = app.Services.GetRequiredService<IDbContextFactory<InventoryContext>>().CreateDbContext();
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+    
+    if (pendingMigrations.Any())
+    {
+        logger.LogInformation("Applying {Count} pending migrations...", pendingMigrations.Count());
+        await context.Database.MigrateAsync();
+        logger.LogInformation("Database migrations applied successfully");
+    }
+    else
+    {
+        logger.LogInformation("No pending migrations found");
+    }
 
-    logger.LogInformation("Applying database migrations...");
-    //context.Database.Migrate();
-    logger.LogInformation("Database migrations applied successfully.");
+    logger.LogInformation("Database created successfully.");
 }
 catch (Exception ex)
 {
@@ -164,6 +143,7 @@ app.UseCors(i => i
     .AllowAnyMethod()
     .AllowAnyHeader()
 );
+app.MapHealthChecks("/health");
 app.MapGraphQL();
 app.UseWebSockets();
 app.MapControllers();

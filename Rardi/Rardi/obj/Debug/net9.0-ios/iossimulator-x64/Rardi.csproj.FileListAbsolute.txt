@@ -381,3 +381,6 @@ f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\refint\Rar
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\Rardi.pdb
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\Rardi.genruntimeconfig.cache
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\ref\Rardi.dll
+F:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\9jpflg1ys3-y9wjjswjms.gz
+F:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\publish\9jpflg1ys3-y9wjjswjms.br
+F:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\Rardi.sourcelink.json

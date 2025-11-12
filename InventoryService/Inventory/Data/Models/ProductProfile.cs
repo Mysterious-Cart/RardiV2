@@ -6,7 +6,7 @@ using Inventory.Data;
 /// </summary>
 public class ProductProfile
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public Guid ProductId { get; set; }
     public ProductEntity? Product { get; set; }
@@ -18,6 +18,6 @@ public class ProductProfile
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    public bool isDeleted { get; set; }
+    public bool isDeleted { get; set; } = false;
     public DateTime? DeletedAt { get; set; }
 }

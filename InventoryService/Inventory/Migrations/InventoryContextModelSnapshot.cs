@@ -18,12 +18,12 @@ namespace Inventory.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Inventory")
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CategoryProduct", b =>
+            modelBuilder.Entity("CategoryProductEntity", b =>
                 {
                     b.Property<Guid>("CategoriesId")
                         .HasColumnType("uuid");
@@ -35,7 +35,22 @@ namespace Inventory.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("CategoryProduct", "Inventory");
+                    b.ToTable("CategoryProductEntity", "Inventory");
+                });
+
+            modelBuilder.Entity("Inventory.Assets.Location", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Location", "Inventory");
                 });
 
             modelBuilder.Entity("Inventory.Data.Category", b =>
@@ -45,7 +60,6 @@ namespace Inventory.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -91,7 +105,7 @@ namespace Inventory.Migrations
                     b.ToTable("Orders", "Inventory");
                 });
 
-            modelBuilder.Entity("Inventory.Data.Product", b =>
+            modelBuilder.Entity("Inventory.Data.ProductEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -104,6 +118,9 @@ namespace Inventory.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EnglishNormalizedName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -156,18 +173,56 @@ namespace Inventory.Migrations
                     b.ToTable("ProductSupplierProfiles", "Inventory");
                 });
 
+            modelBuilder.Entity("Inventory.Data.ProductTransfer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("FromLocationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ToLocationId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromLocationId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ToLocationId");
+
+                    b.ToTable("ProductTransfers", "Inventory");
+                });
+
             modelBuilder.Entity("Inventory.Data.Supplier", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ContactEmail")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -179,6 +234,9 @@ namespace Inventory.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -226,7 +284,7 @@ namespace Inventory.Migrations
                     b.ToTable("ProductProfiles", "Inventory");
                 });
 
-            modelBuilder.Entity("CategoryProduct", b =>
+            modelBuilder.Entity("CategoryProductEntity", b =>
                 {
                     b.HasOne("Inventory.Data.Category", null)
                         .WithMany()
@@ -234,7 +292,7 @@ namespace Inventory.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Inventory.Data.Product", null)
+                    b.HasOne("Inventory.Data.ProductEntity", null)
                         .WithMany()
                         .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -252,7 +310,7 @@ namespace Inventory.Migrations
 
             modelBuilder.Entity("Inventory.Data.ProductSupplierProfiles", b =>
                 {
-                    b.HasOne("Inventory.Data.Product", "Product")
+                    b.HasOne("Inventory.Data.ProductEntity", "Product")
                         .WithMany("SupplierProfiles")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -269,9 +327,36 @@ namespace Inventory.Migrations
                     b.Navigation("Supplier");
                 });
 
+            modelBuilder.Entity("Inventory.Data.ProductTransfer", b =>
+                {
+                    b.HasOne("Inventory.Assets.Location", "FromLocation")
+                        .WithMany()
+                        .HasForeignKey("FromLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Inventory.Data.ProductEntity", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Inventory.Assets.Location", "ToLocation")
+                        .WithMany()
+                        .HasForeignKey("ToLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FromLocation");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ToLocation");
+                });
+
             modelBuilder.Entity("ProductProfile", b =>
                 {
-                    b.HasOne("Inventory.Data.Product", "Product")
+                    b.HasOne("Inventory.Data.ProductEntity", "Product")
                         .WithMany("Details")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -280,7 +365,7 @@ namespace Inventory.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Inventory.Data.Product", b =>
+            modelBuilder.Entity("Inventory.Data.ProductEntity", b =>
                 {
                     b.Navigation("Details");
 

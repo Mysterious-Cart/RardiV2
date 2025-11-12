@@ -1,5 +1,8 @@
 namespace Inventory.Data;
 
+/// <summary>
+/// ProductSupplierProfiles represents the relationship between Products and their Suppliers, including the latest import price.
+/// </summary>
 public class ProductSupplierProfiles
 {
     public Guid ProductId { get; set; }

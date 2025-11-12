@@ -51,6 +51,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "AWSSDK.RDS": {
+              "target": "Package",
+              "version": "[4.0.10.9, )"
+            },
+            "AWSSDK.SecretsManager": {
+              "target": "Package",
+              "version": "[4.0.2.2, )"
+            },
             "HotChocolate": {
               "target": "Package",
               "version": "[15.1.11, )"
@@ -74,6 +82,10 @@
             "Identity": {
               "target": "Package",
               "version": "[1.0.3, )"
+            },
+            "Mapster.JsonNet": {
+              "target": "Package",
+              "version": "[1.1.1, )"
             },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",

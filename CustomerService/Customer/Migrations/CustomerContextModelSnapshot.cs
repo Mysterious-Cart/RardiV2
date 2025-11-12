@@ -18,33 +18,71 @@ namespace Customer.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Customer")
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Customer.Data.Category", b =>
+            modelBuilder.Entity("Customer.Data.Cart", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid?>("VehicleId")
+                    b.Property<Guid?>("CustomerVehicleProfileCustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CustomerVehicleProfileVehicleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("VehicleId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("VehicleId");
+                    b.HasIndex("CustomerVehicleProfileCustomerId", "CustomerVehicleProfileVehicleId");
 
-                    b.ToTable("Categories", "Customer");
+                    b.ToTable("Carts", "Customer");
+                });
+
+            modelBuilder.Entity("Customer.Data.CartItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CartId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("CartItems", "Customer");
                 });
 
             modelBuilder.Entity("Customer.Data.CustomerProfile", b =>
@@ -60,18 +98,20 @@ namespace Customer.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.PrimitiveCollection<Guid[]>("Locations")
+                        .IsRequired()
+                        .HasColumnType("uuid[]");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -119,7 +159,10 @@ namespace Customer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Year")
+                    b.Property<string>("VIN")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Year")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -127,11 +170,20 @@ namespace Customer.Migrations
                     b.ToTable("Vehicles", "Customer");
                 });
 
-            modelBuilder.Entity("Customer.Data.Category", b =>
+            modelBuilder.Entity("Customer.Data.Cart", b =>
                 {
-                    b.HasOne("Customer.Data.Vehicle", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("VehicleId");
+                    b.HasOne("Customer.Data.CustomerVehicleProfile", "CustomerVehicleProfile")
+                        .WithMany("Carts")
+                        .HasForeignKey("CustomerVehicleProfileCustomerId", "CustomerVehicleProfileVehicleId");
+
+                    b.Navigation("CustomerVehicleProfile");
+                });
+
+            modelBuilder.Entity("Customer.Data.CartItem", b =>
+                {
+                    b.HasOne("Customer.Data.Cart", null)
+                        .WithMany("Items")
+                        .HasForeignKey("CartId");
                 });
 
             modelBuilder.Entity("Customer.Data.CustomerVehicleProfile", b =>
@@ -153,9 +205,14 @@ namespace Customer.Migrations
                     b.Navigation("Vehicle");
                 });
 
-            modelBuilder.Entity("Customer.Data.Vehicle", b =>
+            modelBuilder.Entity("Customer.Data.Cart", b =>
                 {
-                    b.Navigation("Categories");
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Customer.Data.CustomerVehicleProfile", b =>
+                {
+                    b.Navigation("Carts");
                 });
 #pragma warning restore 612, 618
         }

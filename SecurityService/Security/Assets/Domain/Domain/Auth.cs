@@ -1,6 +1,6 @@
 using Security.Data;
-using Security.Asset;
-namespace Security.Asset;
+using Security.Assets;
+namespace Security.Assets;
 public abstract record PayloadBase
 {
     public bool Success { get; }

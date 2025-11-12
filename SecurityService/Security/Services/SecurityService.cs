@@ -3,7 +3,7 @@ namespace Security.Service;
 using Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Security.Asset;
+using Security.Assets;
 using Security.Data;
 
 public class SecurityService(
@@ -12,7 +12,7 @@ public class SecurityService(
         SignInManager<User> signInManager,
         RoleManager<Role> roleManager,
         JwtTokenService jwtTokenService,
-        SecurityContext context
+        IDbContextFactory<SecurityContext> context
     ) : ISecurityService
 {
     private readonly ILogger<SecurityService> _logger = logger;
@@ -20,14 +20,14 @@ public class SecurityService(
     private readonly SignInManager<User> _signInManager = signInManager;
     private readonly RoleManager<Role> _roleManager = roleManager;
     private readonly JwtTokenService _jwtTokenService = jwtTokenService;
-    private readonly SecurityContext _context = context;
+    private readonly SecurityContext _context = context.CreateDbContext();
 
-    public async Task<UserRegistrationResult> CreateUser(string username, string password)
+    public async Task<UserRegistrationResult> CreateUser(string username, string password, Guid locationId)
     {
 
         try
         {
-            var user = new User { UserName = username, Email = username };
+            var user = new User { UserName = username, Email = username, LocationId = locationId };
             var result = await _userManager.CreateAsync(user, password);
 
             if (result.Succeeded)
@@ -51,7 +51,7 @@ public class SecurityService(
         }
     }
 
-    public async Task<User?> GetUserById(Guid userId) => await _userManager.FindByIdAsync(userId.ToString());
+    public async Task<User?> GetUserById(Guid userId) => await _context.Users.Include(i => i.Location).FirstAsync(u => u.Id == userId);
     public async Task<User?> GetUserByName(string username) => await _userManager.FindByNameAsync(username);
     public async Task<List<User>> GetAllUsers() => await _userManager.Users.ToListAsync();
 
@@ -92,7 +92,8 @@ public class SecurityService(
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                var token = _jwtTokenService.GenerateToken(user, await GetRolesForUserId(user.Id));
+                var roles = await GetRolesForUserId(user.Id);
+                var token = _jwtTokenService.GenerateToken(user, roles);
                 return new LoginPayload(true, user, token, "Login successful.");
             }
             catch (OperationCanceledException)
@@ -112,43 +113,48 @@ public class SecurityService(
         }
     }
 
-    private async Task<(User, Role)> SeedTestUser(CancellationToken cancellationToken = default)
+    public async Task<(User, Role)> SeedAdminUser()
     {
-        // Avoid too much round trip to Db
-        var admin = new User { UserName = "admin", Email = "admin@example.com" };
+        var isLocationExist = await _context.Locations.FirstOrDefaultAsync(l => l.Name == "All"); // null if not exists
+        var location = isLocationExist ?? new Location { Id = Guid.NewGuid(), Name = "All" };
+        var admin = new User { UserName = "admin", Email = "admin@example.com", LocationId = location.Id };
         var AdministratorRole = new Role { Name = "Administrator" };
 
         if ((await _userManager.FindByNameAsync(admin.UserName)) == null)
         {
-            cancellationToken.ThrowIfCancellationRequested();
 
-            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+            await using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
+                // Add Location "All" if not exists
+                if(isLocationExist is null)
+                {
+                    _context.Locations.Add(location);
+                    await _context.SaveChangesAsync();
+                }
+                
                 //Create User call Admin 
                 await _userManager.CreateAsync(admin, "Admin@123");
-                cancellationToken.ThrowIfCancellationRequested();
                 //Create Role call Administrator
-                await _roleManager.CreateAsync(AdministratorRole);
-                cancellationToken.ThrowIfCancellationRequested();
+                if(!await _roleManager.RoleExistsAsync(AdministratorRole.Name!))
+                {
+                    await _roleManager.CreateAsync(AdministratorRole);
+                }
                 //Assign Role to User
                 await _userManager.AddToRoleAsync(admin, AdministratorRole.Name);
                 //Sign in the user
                 await _signInManager.SignInAsync(admin, isPersistent: false, "JwtBearer");
                 var token = _jwtTokenService.GenerateToken(admin, [AdministratorRole.Name.ToString()]);
-                await transaction.CommitAsync(cancellationToken);
+                await transaction.CommitAsync();
 
-                return (admin, AdministratorRole);
+                var user = await _context.Users.FindAsync(admin.Id) ?? throw new InvalidOperationException("Failed to create user. User not found after creation.");
+                return (user, AdministratorRole);
 
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync(cancellationToken);
+                await transaction.RollbackAsync();
                 _logger.LogError("An error occurred while creating test admin user: {message}. Traces {Traces}", ex.Message, ex.StackTrace);
                 throw new InvalidOperationException($"Login failed due to an internal error: {ex.Message}", ex.InnerException);
             }
@@ -229,7 +235,6 @@ public class SecurityService(
 
     public async Task<List<Role>> CreateRoles(List<string> roleName, bool ignoreIfExists = true)
     {
-        var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
             // Check Role with same name
@@ -238,38 +243,28 @@ public class SecurityService(
             // Convert Name to Role
             foreach (var r in roleName)
             {
+                if (matches.Any(m => m.Name == r) && ignoreIfExists)
+                {
+                    continue;
+                }
+                else if (matches.Any(m => m.Name == r) && !ignoreIfExists)
+                {
+                    throw new ArgumentException($"Role {r} already exists.");
+                }
                 var role = new Role() { Name = r };
                 roles.Add(role);
             }
-            // Ignore Roles if exist
-            if (!matches.Count.Equals(0) && ignoreIfExists)
-            {
-                foreach (var match in matches)
-                {
-                    roles.RemoveAll(r => r.Name == match.Name);
-                }
-            }
-            else if(!matches.Count.Equals(0) && !ignoreIfExists)
-            {
-                throw new InvalidOperationException("Some roles already exist.");
-            }
 
-            await _context.AddRangeAsync(roles);
+            await _context.Roles.AddRangeAsync(roles);
             await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
 
             return await _context.Roles.Where(r => roleName.Contains(r.Name!)).ToListAsync()
                 ?? throw new InvalidOperationException("Role creation failed.");
-            
-        }catch(Exception ex)
-        {
-            await transaction.RollbackAsync();
-            throw new InvalidOperationException($"A fatal error occurred while creating roles: {ex.Message}");
+
         }
-        finally
+        catch (Exception ex)
         {
-            await transaction.DisposeAsync();
+            throw new InvalidOperationException($"A fatal error occurred while creating roles: {ex.Message}");
         }
         
     }

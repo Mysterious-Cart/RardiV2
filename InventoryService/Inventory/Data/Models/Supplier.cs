@@ -6,7 +6,7 @@ public partial class Supplier
 
     public string Name { get; set; } = null!;
 
-    public string ContactEmail { get; set; } = null!;
+    public string Email { get; set; } = null!;
 
     public string PhoneNumber { get; set; } = null!;
 
@@ -15,5 +15,7 @@ public partial class Supplier
     public DateTime UpdatedAt { get; set; }
 
     public ICollection<ProductEntity> Products { get; set; } = [];
+    public bool isDeleted { get; set; } = false;
+    public DateTime? DeletedAt { get; set; }
     
 }

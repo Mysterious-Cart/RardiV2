@@ -1,6 +1,39 @@
-﻿<Router AppAssembly="typeof(Layout.MainLayout).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
-    </Found>
-</Router>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(Layout.MainLayout).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+                <NotAuthorized>
+                    @if (context.User.Identity?.IsAuthenticated != true)
+                    {
+                        <RedirectToLogin />
+                    }
+                    else
+                    {
+                        <Layout.MainLayout>
+                            <MudAlert Severity="Severity.Error" Class="m-4">
+                                <MudText Typo="Typo.h6">Access Denied</MudText>
+                                <MudText>You don't have permission to access this page.</MudText>
+                                <MudText Typo="Typo.body2">Required roles: @string.Join(", ", context.Roles)</MudText>
+                            </MudAlert>
+                        </Layout.MainLayout>
+                    }
+                </NotAuthorized>
+                <Authorizing>
+                    <Layout.MainLayout>
+                        <MudContainer Class="d-flex justify-center align-center" Style="min-height: 80vh;">
+                            <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                        </MudContainer>
+                    </Layout.MainLayout>
+                </Authorizing>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <Layout.MainLayout>
+                <MudText Typo="Typo.h4" Class="m-4">Sorry, there's nothing at this address.</MudText>
+            </Layout.MainLayout>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

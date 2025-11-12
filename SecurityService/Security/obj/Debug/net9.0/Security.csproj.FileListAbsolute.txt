@@ -182,3 +182,11 @@ F:\Projects\RardiV2\SecurityService\Security\obj\Debug\net9.0\refint\Security.dl
 F:\Projects\RardiV2\SecurityService\Security\obj\Debug\net9.0\Security.pdb
 F:\Projects\RardiV2\SecurityService\Security\obj\Debug\net9.0\Security.genruntimeconfig.cache
 F:\Projects\RardiV2\SecurityService\Security\obj\Debug\net9.0\ref\Security.dll
+F:\Projects\RardiV2\securityservice\security\obj\Debug\net9.0\Security.sourcelink.json
+F:\Projects\RardiV2\SecurityService\Security\bin\Debug\net9.0\AWSSDK.Core.dll
+F:\Projects\RardiV2\SecurityService\Security\bin\Debug\net9.0\AWSSDK.SecretsManager.dll
+F:\Projects\RardiV2\SecurityService\Security\bin\Debug\net9.0\AWSSDK.RDS.dll
+F:\Projects\RardiV2\SecurityService\Security\bin\Debug\net9.0\Mapster.dll
+F:\Projects\RardiV2\SecurityService\Security\bin\Debug\net9.0\Mapster.Core.dll
+F:\Projects\RardiV2\SecurityService\Security\bin\Debug\net9.0\Mapster.JsonNet.dll
+F:\Projects\RardiV2\SecurityService\Security\bin\Debug\net9.0\Newtonsoft.Json.dll

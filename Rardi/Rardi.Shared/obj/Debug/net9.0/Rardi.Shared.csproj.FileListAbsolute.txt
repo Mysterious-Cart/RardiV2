@@ -1,15 +1,16 @@
-F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.csproj.AssemblyReference.cache
-F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\rpswa.dswa.cache.json
-F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.GeneratedMSBuildEditorConfig.editorconfig
-F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.AssemblyInfoInputs.cache
-F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.AssemblyInfo.cs
-F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.csproj.CoreCompileInputs.cache
 F:\Projects\RardiV2\rardi\Rardi.Shared\bin\Debug\net9.0\.graphqlrc.json
 F:\Projects\RardiV2\rardi\Rardi.Shared\bin\Debug\net9.0\Rardi.Shared.staticwebassets.runtime.json
 F:\Projects\RardiV2\rardi\Rardi.Shared\bin\Debug\net9.0\Rardi.Shared.staticwebassets.endpoints.json
 F:\Projects\RardiV2\rardi\Rardi.Shared\bin\Debug\net9.0\Rardi.Shared.deps.json
 F:\Projects\RardiV2\rardi\Rardi.Shared\bin\Debug\net9.0\Rardi.Shared.dll
 F:\Projects\RardiV2\rardi\Rardi.Shared\bin\Debug\net9.0\Rardi.Shared.pdb
+F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.csproj.AssemblyReference.cache
+F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\rpswa.dswa.cache.json
+F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.GeneratedMSBuildEditorConfig.editorconfig
+F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.AssemblyInfoInputs.cache
+F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.AssemblyInfo.cs
+F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.csproj.CoreCompileInputs.cache
+F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.sourcelink.json
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\rjimswa.dswa.cache.json
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
@@ -23,6 +24,8 @@ F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\compressed\xa5fgxnhtc-g1
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\compressed\qnbjif1bwo-da95v2qkru.gz
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\compressed\yb0ltx61zc-6gzpyzhau4.gz
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\compressed\1kqurqnkmo-8inm30yfxf.gz
+F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\compressed\39ivs4mjdt-5ndxwgt9bt.gz
+F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\compressed\alensd0vjz-5ndxwgt9bt.gz
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\staticwebassets.build.json
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\staticwebassets.build.json.cache
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\staticwebassets.development.json
@@ -37,5 +40,3 @@ F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.dll
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\refint\Rardi.Shared.dll
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\Rardi.Shared.pdb
 F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\ref\Rardi.Shared.dll
-F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\compressed\39ivs4mjdt-5ndxwgt9bt.gz
-F:\Projects\RardiV2\rardi\Rardi.Shared\obj\Debug\net9.0\compressed\alensd0vjz-5ndxwgt9bt.gz

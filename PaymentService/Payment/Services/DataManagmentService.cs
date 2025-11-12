@@ -90,15 +90,7 @@ public class DataManagementService(IDbContextFactory<PaymentContext> contextFact
                 var transac = new Model.Transaction
                 {
                     Id = Guid.NewGuid(),
-                    CustomerId = Guid.Empty,
-                    Customer = new CustomerSnapshot
-                    {
-                        Id = customersnapshotId,
-                        Name = "Unknown",
-                        PlateNumber = record.Plate,
-                        CustomerId = Guid.Empty
-                    },
-                    CustomerSnapshotId = customersnapshotId,
+                    CartID = Guid.Empty,
                     PaymentInfos = await AddPaymentInfos(record),
                     CreatedAt = ParseCashoutDate(record.CashoutDate),
                     TransactBy = Guid.Empty,
@@ -149,14 +141,14 @@ public class DataManagementService(IDbContextFactory<PaymentContext> contextFact
 }
 
 public class CsvObject {
-    public string Plate { get; set; }
-    public string CashoutDate { get; set; }
+    public string? Plate { get; set; }
+    public string? CashoutDate { get; set; }
     public decimal Total { get; set; }
     public decimal Bank { get; set; }
     public decimal Dollar { get; set; }
     public decimal Riel { get; set; }
     public decimal Baht { get; set; }
     public sbyte Company { get; set; }
-    public string User { get; set; }
+    public string? User { get; set; }
     public sbyte IsDeleted { get; set; }
 }

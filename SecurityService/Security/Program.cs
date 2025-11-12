@@ -1,15 +1,64 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+
 using Microsoft.EntityFrameworkCore;
 using Security;
 using Security.Service;
-using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System.Security.Cryptography;
 using Security.Data;
-
+using Amazon.SecretsManager;
+using Amazon.SecretsManager.Model;
+using Amazon.RDS;
+using Security.Assets.ServiceConfig;
+using Mapster;
+using Amazon;
+using Newtonsoft.Json.Linq;
+using Amazon.RDS.Model;
 var builder = WebApplication.CreateBuilder(args);
+
+TypeAdapterConfig.GlobalSettings.EnableJsonMapping();
+/*
+
+#region Retrieve Secrets from AWS Secrets Manager
+
+string ConnectionString = string.Empty;
+RSAKeyPair rsaKeyPair = new(string.Empty, string.Empty);
+try
+{
+    const string Database = "Inventory";
+    const string DBrequestSecretID = "rds!db-e38144f7-465c-40f0-920f-284cab0bec81";
+    const string DBInstanceDescribe = "rardi-inventory-db";
+    const string KeyrequestSecretID = "dev/rardi";
+
+    AmazonSecretsManagerClient client = new(RegionEndpoint.APSoutheast1);
+    AmazonRDSClient rdsClient = new(RegionEndpoint.APSoutheast1);
+    GetSecretValueRequest DBrequest = new() { SecretId = DBrequestSecretID };
+    GetSecretValueRequest Keyrequest = new() { SecretId = KeyrequestSecretID };
+
+    var DBSecretKeyResponse = await client.GetSecretValueAsync(DBrequest);
+    
+    var dbConfig = JObject.Parse(DBSecretKeyResponse.SecretString).Adapt<DatabaseConfig>();
+    dbConfig.Database = Database;
+    // Get RDS endpoint dynamically
+    var rdsResponse = await rdsClient.DescribeDBInstancesAsync(new DescribeDBInstancesRequest
+    {
+        DBInstanceIdentifier = DBInstanceDescribe
+
+    });
+
+    var endpoint = rdsResponse.DBInstances[0].Endpoint;
+
+    ConnectionString = $"Host={endpoint.Address};Port={endpoint.Port};Database={dbConfig.Database};Username={dbConfig.Username};Password={dbConfig.Password};SSL Mode=Require;";
+
+    var SecreteKeyResponse = await client.GetSecretValueAsync(Keyrequest);
+    rsaKeyPair = JObject.Parse(SecreteKeyResponse.SecretString).Adapt<RSAKeyPair>();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error retrieving secrets: {ex.Message}");
+    throw;
+}
+#endregion
+*/
 try
 {
     builder.Services.AddDbContextFactory<SecurityContext>(options =>
@@ -27,94 +76,15 @@ builder.Services.AddLogging(config =>
     config.AddDebug();
 });
 
-builder.Services.AddIdentityCore<User>()
-    .AddRoles<Role>()
-    .AddEntityFrameworkStores<SecurityContext>()
-    .AddUserManager<UserManager<User>>()
-    .AddSignInManager<SignInManager<User>>()
-    .AddRoleManager<RoleManager<Role>>()
-    .AddDefaultTokenProviders();
+var rsakeypairs = new RSAKeyPair(builder.Configuration["JwtSettings:PublicKey"]!, builder.Configuration["JwtSettings:PrivateKey"]!);
+builder.Services.AddScoped<ISecurityService,SecurityService>();
+builder.Services.AddScoped<SeederService>();
+builder.Services.AddScoped<JwtTokenService>();
+builder.Services.AddScoped<LocationService>();
+builder.Services.AddIdentityConfiguration();
+builder.Services.AddSecurityConfiguration(builder.Configuration, rsakeypairs);
+builder.Services.AddHotChocolateConfiguration(builder);
 
-var _rsa = RSA.Create();
-_rsa.ImportFromPem(builder.Configuration["JwtSettings:PublicKey"]!.ToCharArray());
-var key = new RsaSecurityKey(_rsa);
-
-builder.Services
-    .AddScoped<ISecurityService, SecurityService>()
-    .AddScoped<JwtTokenService>()
-    .AddScoped<SeederService>()
-    .AddAuthorization()
-    .AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddCookie(IdentityConstants.ApplicationScheme)
-    .AddCookie(IdentityConstants.ExternalScheme)
-    .AddCookie(IdentityConstants.TwoFactorUserIdScheme)
-    .AddJwtBearer(options =>
-    {
-
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            TryAllIssuerSigningKeys = true,
-            IssuerSigningKey = key,
-            ClockSkew = TimeSpan.FromMinutes(1),
-            AuthenticationType = "JWT",
-            
-        };
-        options.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
-            {
-                Console.WriteLine($"JWT Message Received:");
-                Console.WriteLine($"  Authorization Header: {context.Request.Headers["Authorization"]}");
-
-                // Check for token in different locations
-                if (string.IsNullOrEmpty(context.Token))
-                {
-                    var authHeader = context.Request.Headers.Authorization.FirstOrDefault();
-                    if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
-                    {
-                        context.Token = authHeader.Substring("Bearer ".Length).Trim();
-                        Console.WriteLine($"  Token extracted from Authorization header");
-                    }
-                }
-
-                return Task.CompletedTask;
-            },
-            
-            OnAuthenticationFailed = context =>
-            {
-                // When authentication fails forward to API to show request token expiration or failure
-                Console.WriteLine($"Authentication failed: {context.Exception.Message}");
-                return Task.CompletedTask;
-            },
-            
-            OnTokenValidated = context =>
-            {
-                Console.WriteLine($"Token validated for user: {context.Principal?.Identity?.Name}");
-                return Task.CompletedTask;
-            }
-            
-        };
-    });
-
-
-builder.Services
-    .AddGraphQLServer()
-    .AddApolloFederation()
-    .AddQueryType<Security.Graphql.Query>()
-    .AddMutationType<Security.Graphql.Mutation>()
-    .AddAuthorization()
-    .InitializeOnStartup()
-    .ModifyRequestOptions(
-        o => o.IncludeExceptionDetails =
-            builder.Environment.IsDevelopment());;
 
 builder.Services.AddControllers();
 var app = builder.Build();

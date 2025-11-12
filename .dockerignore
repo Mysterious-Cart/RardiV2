@@ -1,0 +1,90 @@
+# Ignore build outputs
+**/bin/
+**/obj/
+**/out/
+
+# Ignore Visual Studio and VS Code files
+**/.vs/
+**/.vscode/
+*.sln.docstates
+*.userprefs
+*.pidb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore packages and dependencies
+**/node_modules/
+**/packages/
+**/.nuget/
+
+# Ignore logs
+**/logs/
+**/*.log
+
+# Ignore temporary files
+**/tmp/
+**/temp/
+**/*.tmp
+**/*.temp
+
+# Ignore OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*~
+
+# Ignore git files
+.git/
+.gitignore
+.gitattributes
+
+# Ignore documentation
+**/README.md
+**/readme.md
+**/CHANGELOG.md
+**/LICENSE
+**/docs/
+
+# Ignore test files and coverage reports
+**/TestResults/
+**/coverage/
+**/*.coverage
+**/*.coveragexml
+
+# Ignore docker files in subprojects
+**/Dockerfile
+**/docker-compose*.yml
+**/.dockerignore
+
+# Ignore IDE specific files
+**/*.DotSettings
+**/*.DotSettings.user
+**/.idea/
+**/launchSettings.json
+
+# Ignore certificates and keys (but keep directory structure)
+**/Keys/*.pfx
+**/Keys/*.key
+**/Keys/*.crt
+**/ssl/
+
+# Ignore environment specific configs in development
+**/appsettings.Local.json
+**/appsettings.Production.json
+
+# Ignore migrations (they will be applied at runtime)
+# **/Migrations/
+
+# Ignore frontend build outputs
+**/wwwroot/dist/
+**/wwwroot/build/
+**/frontend/build/
+**/frontend/dist/
+**/Frontend/Rardi/node_modules/

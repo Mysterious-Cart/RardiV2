@@ -1,0 +1,52 @@
+﻿@page "/products/list"
+@using Rardi.Shared.GraphQL.Components
+@using StrawberryShake
+@inject IDialogService DialogService;
+@inject Rardi.Shared.Services.AppService AppService
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="" Class="mt-4">
+    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" class="mt-4" style="height: auto; display: flex;">
+        <MudTextField @bind-Value=@SearchText DebounceInterval="300" T=string Label="Search Products"  FullWidth="false" Margin="Margin.Dense" Variant="Variant.Text" style=" width:25%; height:auto" /> 
+        <MudButton OnClick="CreateProduct" Variant="Variant.Filled" Color="Color.Primary" style="height:auto" EndIcon="@Icons.Material.Filled.Add" class="mt-2 mb-2">Create</MudButton>
+    </MudContainer>
+    <MudCard Class="mt-4">
+        <MudCardContent>
+            <UseGetProduct  Context="result" Strategy="ExecutionStrategy.CacheFirst">
+                <ChildContent>
+                    <MudDataGrid Row Items=@result.Product?.Nodes Context=pd >
+                        <Columns>
+                            <PropertyColumn Property="i => i.Name" Title="Product Name" />
+                            <PropertyColumn Property="i => i.Description" Title="Description" />
+                        </Columns>
+                    </MudDataGrid>
+                </ChildContent>
+                <ErrorContent>
+                    Something went wrong ...
+                    @result.First().Message
+                </ErrorContent>
+                <LoadingContent  >
+                    Loading ...
+                </LoadingContent>
+            </UseGetProduct>
+            
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
+
+@code{
+    [Inject]
+    public IRardiClientWeb rardiClientWeb { get; set; }
+    private string SearchText = "";
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        AppService.SetPageInfo("Product Dashboard", "/product-dashboard");
+    }
+
+    private async Task OnSearchTextChanged(string text)
+    {
+        SearchText = text;
+        // Implement search logic here, e.g., refetch data with the new search text
+    }
+    private async Task CreateProduct() => await DialogService.ShowAsync<CreateProductForm>("Create New Product", new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true });
+}

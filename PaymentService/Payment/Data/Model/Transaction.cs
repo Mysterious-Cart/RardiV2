@@ -8,12 +8,15 @@ public class Transaction
     public bool IsDeleted { get; set; } = false;
     public DateTime? DeletedAt { get; set; }
 
-    // Optional link to Customer entity if available, null if customer is a walk-in or no longer available
-    public Guid? CustomerId { get; set; }
-    public Guid CustomerSnapshotId { get; set; }
-    public CustomerSnapshot? Customer { get; set; }
+    /// <summary>
+    /// Optional link to Customer Cart entity if available, null if customer is a walk-in or no longer available
+    /// </summary>
+    public Guid? CartID { get; set; }
+    public string PlateNumber { get; set; } = null!;
     public decimal Total { get; set; }
-    // User who processed the transaction
+    /// <summary>
+    /// User who processed the transaction
+    /// </summary>
     public Guid TransactBy { get; set; }
     public ICollection<PaymentInfo> PaymentInfos { get; set; } = [];
     public ICollection<TransactionItem> Items { get; set; } = [];

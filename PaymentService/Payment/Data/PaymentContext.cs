@@ -15,7 +15,6 @@ public class PaymentContext : DbContext
 
     public DbSet<Transaction> Transactions { get; set; } = null!;
     public DbSet<TransactionItem> TransactionItems { get; set; } = null!;
-    public DbSet<ProductSnapShot> ProductSnapShots { get; set; } = null!;
     public DbSet<PaymentInfo> PaymentInfos { get; set; } = null!;
     public DbSet<PaymentType> PaymentTypes { get; set; } = null!;
 }

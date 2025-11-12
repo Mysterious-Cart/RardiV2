@@ -1,5 +1,6 @@
 namespace Payment.Data.DataLoader;
 
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Payment.Data;
 using Payment.Services;
@@ -20,12 +21,7 @@ public class TransactionOverviewLoader : BatchDataLoader<Guid, List<TransactionO
         var transactions = _context.Transactions
             .Include(i => i.PaymentInfos)
             .ThenInclude(pi => pi.PaymentType)
-            .Select(t => new TransactionOverview(
-                t.Id,
-                t.Total,
-                t.CreatedAt,
-                t.Customer
-            ));
+            .ProjectToType<TransactionOverview>();
 
         return transactions.Where(t => keys.Contains(t.Id)).GroupBy(i => i.Id).ToDictionary(t => t.Key, t => t.ToList());
     }

@@ -4,8 +4,9 @@ using Rardi.Web.Services;
 using StrawberryShake;
 using Rardi.Shared;
 using MudBlazor.Services;
-using Microsoft.AspNetCore.Components.Web;
+
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Rardi.Shared.Assets;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,10 +17,11 @@ builder.Services.AddRazorComponents()
 // Add device-specific services used by the Rardi.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
 builder.Services.AddMudServices();
+builder.Services.AddRardiClient();
 builder.Services.AddScoped(sp => new HttpClient());
 builder.Services.AddScoped<AppService>();
-builder.Services.AddRardiClientWeb().ConfigureHttpClient(client => client.BaseAddress = new Uri("http://localhost:5033/graphql/"));
-
+builder.Services.AddAuthenticationCore();
+builder.Services.AddCascadingAuthenticationState();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -225,3 +225,6 @@ f:\Projects\RardiV2\PaymentService\Payment\obj\Debug\net9.0\refint\Payment.dll
 f:\Projects\RardiV2\PaymentService\Payment\obj\Debug\net9.0\Payment.pdb
 f:\Projects\RardiV2\PaymentService\Payment\obj\Debug\net9.0\Payment.genruntimeconfig.cache
 f:\Projects\RardiV2\PaymentService\Payment\obj\Debug\net9.0\ref\Payment.dll
+F:\Projects\RardiV2\PaymentService\Payment\obj\Debug\net9.0\Payment.sourcelink.json
+F:\Projects\RardiV2\PaymentService\Payment\bin\Debug\net9.0\Mapster.dll
+F:\Projects\RardiV2\PaymentService\Payment\bin\Debug\net9.0\Mapster.Core.dll

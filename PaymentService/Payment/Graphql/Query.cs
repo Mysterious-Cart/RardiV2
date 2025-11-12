@@ -8,7 +8,7 @@ public class Query
     [UseFiltering]
     [UseSorting]
     [UsePaging]
-    public async Task<List<TransactionOverview>> GetAllTransactionsAsOverviewAsync(
+    public async Task<IEnumerable<TransactionOverview>> GetAllTransactionsAsOverviewAsync(
         TransactionOverviewLoader transactionOverviewLoader,
         Guid Id,
         CancellationToken cancellationToken = default)

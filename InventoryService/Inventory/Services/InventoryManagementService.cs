@@ -3,31 +3,35 @@ using Inventory.Data;
 using DTO = Inventory.Assets.Domain;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
-using System.Text;
-using System.Globalization;
-using System.Text.RegularExpressions;
 using HotChocolate.Subscriptions;
-
+using Inventory.Assets.Interface;
 namespace Inventory.Services;
 
 public class InventoryManagementService(
     ITopicEventSender eventSender,
-    InventoryContext context,
+    IDbContextFactory<InventoryContext> context,
     ILogger<InventoryManagementService> logger
-)
+) : IInventoryManagementService
 {
     private readonly ITopicEventSender _eventSender = eventSender;
-    private readonly InventoryContext _context = context;
+    private readonly InventoryContext _context = context.CreateDbContext();
     private readonly ILogger<InventoryManagementService> _logger = logger;
 
-    
+
     public async Task<DTO.Product> GetProductById(Guid productId)
     {
         return (await _context.Products.FindAsync(productId))?.Adapt<DTO.Product>() ?? throw new ArgumentException("Product not found");
     }
 
-    public async Task<DTO.Product> CreateProduct(DTO.CreateProduct createProduct)
+    /// <summary>
+    /// Creates a new product in the inventory system of a specific location.
+    /// </summary>
+    /// <param name="createProduct"></param>
+    /// <param name="LocationId"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
+    public async Task<DTO.Product> CreateProduct(DTO.CreateProduct createProduct, Guid LocationId)
     {
         try
         {
@@ -48,16 +52,30 @@ public class InventoryManagementService(
             {
                 Name = createProduct.Name,
                 NormalizedName = normalizedname,
+                EnglishNormalizedName = createProduct.Name.ToUpperInvariant(),
                 Description = createProduct.Description,
                 TotalStock = createProduct.Stock,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
             };
-            
+            var productpfp = new ProductProfile
+            {
+                ProductId = product.Id,
+                Quantity = createProduct.Stock,
+                Price = createProduct.Price,
+                SKU = createProduct.SKU ?? string.Empty, // generate SKU if not provided
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                LocationId = LocationId
+            };
+
+            var transaction = await _context.Database.BeginTransactionAsync();
             // Add the product
             _context.Products.Add(product);
+            _context.ProductProfiles.Add(productpfp);
             await _context.SaveChangesAsync();
-
+            
+            await transaction.CommitAsync();
             // Check if Creation was successful, and return the created product as DTO
             return (await _context.Products.FindAsync(product.Id))?.Adapt<DTO.Product>()
                 ?? throw new InvalidOperationException("Failed Create Product");
@@ -69,101 +87,62 @@ public class InventoryManagementService(
         }
 
     }
-    
-    public async Task<List<DTO.Product>> GetAllProducts(CancellationToken cancellationToken = default, string? SearchByName = "", bool IncludeDeleted = false)
+    /// <summary>
+    /// Retrieves all products in a specific inventory, with optional filtering by name and inclusion of deleted products.
+    /// </summary>
+    /// <param name="LocationId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <param name="SearchByName"></param>
+    /// <param name="IncludeDeleted"></param>
+    /// <returns></returns>
+    public async Task<IEnumerable<DTO.Product>> GetAllProducts(
+        Guid LocationId,
+        string? SearchByName = "",
+        bool IncludeDeleted = false,
+        CancellationToken cancellationToken = default
+    )
     {
 
         //TODO: Normalize SearchByName input for better search results
         cancellationToken.ThrowIfCancellationRequested();
         if (!IncludeDeleted)
         {
-            // Retrieve all products from the database and map to DTO, Deleted Product is not included by default
+            // If IncludeDeleted is true, retrieve all products including deleted ones
             return await _context.Products
+                .IgnoreQueryFilters()
                 .Where(p => string.IsNullOrEmpty(SearchByName) || p.Name.Contains(SearchByName))
                 .ProjectToType<DTO.Product>()
                 .ToListAsync(cancellationToken);
         }
 
-        // If IncludeDeleted is true, retrieve all products including deleted ones
-        return await _context.Products
-            .IgnoreQueryFilters()
-            .Where(p => string.IsNullOrEmpty(SearchByName) || p.Name.Contains(SearchByName))
-            .ProjectToType<DTO.Product>()
-            .ToListAsync(cancellationToken);
+        var product = await _context.ProductProfiles
+            .Where(p => string.IsNullOrEmpty(SearchByName) || p.Product!.Name.Contains(SearchByName))
+            .Where(p => p.LocationId == LocationId)
+            .AsNoTracking()
+            .Select(i => new DTO.Product(
+                i.Product!.Id,
+                i.Product.Name,
+                i.Price,
+                i.SKU,
+                i.Product.Description ?? "",
+                i.Quantity
+            )).ToListAsync(cancellationToken);
+
+        return product;
+
+        
     }
 
-    public async Task OrderAdded(Order order)
-    {
-        await _eventSender.SendAsync(nameof(this.OrderAdded), order);
-    }
-    public async Task<DTO.Order> CreateOrder(Guid ProductSupplierProfileId, int Quantity, decimal? ImportPrice)
-    {
-        try
-        {
-            var order = new Order
-            {
-                Id = Guid.NewGuid(),
-                ProductSupplierProfileId = ProductSupplierProfileId,
-                Quantity = Quantity,
-                ImportPrice = ImportPrice,
-            };
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-            await OrderAdded(order);
-            return (await _context.Orders.FindAsync(order.Id)).Adapt<DTO.Order>() ?? throw new Exception("Failed Create Order");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error creating order");
-            throw;
-        }
-
-    }
-
-    public async Task CompleteOrder(Guid orderId)
+    public async Task<DTO.Product> UpdateProductStock(Guid productPfpId, int QuantityChange)
     {
         try
         {
-            var transaction = await _context.Database.BeginTransactionAsync();
-            var order = await _context.Orders
-            .Include(o => o.ProductProfile)
-            .ThenInclude(pp => pp!.Product)
-            .FirstOrDefaultAsync(o => o.Id == orderId);
-
-            ArgumentNullException.ThrowIfNull(order, nameof(orderId));
-            if (order.Status != OperationStatus.Pending)
+            if(QuantityChange < 0)
             {
-                throw new InvalidOperationException("Only pending orders can be completed.");
-            }
-            ArgumentNullException.ThrowIfNull(order.ProductProfile, nameof(order.ProductProfile));
-            ArgumentNullException.ThrowIfNull(order.ProductProfile!.Product, nameof(order.ProductProfile.Product));
-
-            order.Status = OperationStatus.Completed;
-            order.ImportPrice ??= order.ProductProfile.LatestImportPrice;
-            order.ProductProfile.LatestImportPrice = order.ImportPrice.Value;
-
-            await UpdateProductStock(order.ProductProfile.Product.Id, order.Quantity);
-
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
-        catch (Exception ex) when (ex is not InvalidOperationException and not ArgumentNullException)
-        {
-            _logger.LogError(ex, "Error completing order");
-            throw;
-        }
-    }
-
-    private async Task<DTO.Product?> UpdateProductStock(Guid productPfpId, int AmountToAdd)
-    {
-        try
-        {
-            if(AmountToAdd < 0)
+                throw new ArgumentException("Changes cannot be negative", nameof(QuantityChange));
+            }else if(QuantityChange == 0)
             {
-                throw new ArgumentException("Changes cannot be negative", nameof(AmountToAdd));
-            }else if(AmountToAdd == 0)
-            {
-                throw new ArgumentException("Changes cannot be zero", nameof(AmountToAdd));
+                throw new ArgumentException("Changes cannot be zero", nameof(QuantityChange));
             }
             var product = await _context.ProductProfiles.Include(i => i.Product).FirstAsync(i => i.Id == productPfpId);
             if (product.Product is null)
@@ -172,9 +151,9 @@ public class InventoryManagementService(
                 throw new NullReferenceException("Product not found for the given ProductProfile. This is most likely result from data inconsistency, missing reference.");
             }
 
-            product.Quantity += AmountToAdd;
+            product.Quantity += QuantityChange;
             product.UpdatedAt = DateTime.UtcNow;
-            product.Product.TotalStock += AmountToAdd;
+            product.Product.TotalStock += QuantityChange;
             product.Product.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -215,8 +194,8 @@ public class InventoryManagementService(
         }
         
     }
-    
-    public async Task<Guid> RestoreProduct(Guid productId)
+
+    public async Task<DTO.Product> RestoreProduct(Guid productId)
     {
         try
         {
@@ -234,7 +213,7 @@ public class InventoryManagementService(
             product.DeletedAt = null;
 
             await _context.SaveChangesAsync();
-            return productId;
+            return product.Adapt<DTO.Product>();
         }catch(Exception ex) when (ex is not ArgumentException)
         {
             _logger.LogError(ex, "Error restoring product");
@@ -242,17 +221,17 @@ public class InventoryManagementService(
         }
         
     }
-    public async Task<bool> DeleteProduct(Guid productId)
+    public async Task<Guid> DeleteProduct(Guid productId)
     {
         var product = await _context.Products.FindAsync(productId);
         if (product == null)
         {
-            return false;
+            return Guid.Empty;
         }
 
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
-        return true;
+        return productId;
     }
     
 

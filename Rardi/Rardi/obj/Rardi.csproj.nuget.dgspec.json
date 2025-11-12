@@ -55,9 +55,9 @@
               "target": "Package",
               "version": "[8.2.4, )"
             },
-            "Microsoft.AspNetCore.Components.Web": {
+            "Microsoft.AspNetCore.Components.Authorization": {
               "target": "Package",
-              "version": "[9.0.8, )"
+              "version": "[9.0.0, )"
             },
             "MudBlazor": {
               "target": "Package",
@@ -70,6 +70,10 @@
             "StrawberryShake.Transport.Http": {
               "target": "Package",
               "version": "[15.1.11, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.2.1, )"
             }
           },
           "imports": [

@@ -91,13 +91,16 @@ builder.Services
             
         };
     });
-
+builder.Services.AddScoped<Customer.Services.CustomerService>();
 
 builder.Services
     .AddGraphQLServer()
     .AddApolloFederation()
     .AddQueryType<Customer.Graphql.Query>()
+    .AddMutationType<Customer.Graphql.Mutation>()
     .AddAuthorization()
+    .AddFiltering()
+    .AddSorting()
     .InitializeOnStartup()
     .ModifyRequestOptions(
         o => o.IncludeExceptionDetails =

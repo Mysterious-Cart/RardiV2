@@ -12,10 +12,11 @@
 
   <ItemGroup>
     <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="8.2.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0" />
     <PackageReference Include="MudBlazor" Version="8.13.0" />
     <PackageReference Include="StrawberryShake.Blazor" Version="15.1.11" />
     <PackageReference Include="StrawberryShake.Transport.Http" Version="15.1.11" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
   </ItemGroup>
 
 </Project>

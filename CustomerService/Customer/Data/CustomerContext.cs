@@ -21,6 +21,7 @@ public class CustomerContext : DbContext
     }
     public DbSet<CustomerProfile> Customers { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
-    public DbSet<Category> Categories { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
     public DbSet<CustomerVehicleProfile> CustomerVehicleProfiles { get; set; }
 }

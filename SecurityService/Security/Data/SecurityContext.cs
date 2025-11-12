@@ -3,7 +3,7 @@ namespace Security.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Security.Asset;
+using Security.Assets;
 
 public class SecurityContext : IdentityDbContext<User, Role, Guid>
 {

@@ -1,5 +1,10 @@
 namespace Inventory.Data;
+
 using Assets;
+
+/// <summary>
+/// Represents a transfer of products between locations.
+/// </summary>
 public class ProductTransfer
 {
     public Guid Id { get; set; }

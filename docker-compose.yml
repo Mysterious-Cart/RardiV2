@@ -1,0 +1,235 @@
+version: '3.8'
+
+services:
+  # Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: rardi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: rardi_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Killergamerxlyy44
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
+    networks:
+      - rardi-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d rardi_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: rardi-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - rardi-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Security Service
+  security-service:
+    build:
+      context: .
+      dockerfile: ./SecurityService/Dockerfile
+    container_name: rardi-security-service
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=rardi_db;Username=postgres;Password=Killergamerxlyy44;
+      - JwtSettings__Issuer=RardiSecurityService
+      - JwtSettings__Audience=RardiClients
+      - JwtSettings__SecretKey=your-super-secret-jwt-key-here-make-it-long-enough
+    ports:
+      - "5001:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - rardi-network
+    volumes:
+      - ./SecurityService/Security/Keys:/app/Keys
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Customer Service
+  customer-service:
+    build:
+      context: .
+      dockerfile: ./CustomerService/Dockerfile
+    container_name: rardi-customer-service
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=rardi_db;Username=postgres;Password=Killergamerxlyy44;
+    ports:
+      - "5002:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      security-service:
+        condition: service_healthy
+    networks:
+      - rardi-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Inventory Service
+  inventory-service:
+    build:
+      context: .
+      dockerfile: ./InventoryService/Dockerfile
+    container_name: rardi-inventory-service
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=rardi_db;Username=postgres;Password=Killergamerxlyy44;
+    ports:
+      - "5003:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      security-service:
+        condition: service_healthy
+    networks:
+      - rardi-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Payment Service
+  payment-service:
+    build:
+      context: .
+      dockerfile: ./PaymentService/Dockerfile
+    container_name: rardi-payment-service
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=rardi_db;Username=postgres;Password=Killergamerxlyy44;
+    ports:
+      - "5004:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      security-service:
+        condition: service_healthy
+    networks:
+      - rardi-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Rardi Web Application
+  rardi-web:
+    build:
+      context: .
+      dockerfile: ./Rardi/Dockerfile.web
+    container_name: rardi-web
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5000:8080"
+    depends_on:
+      - security-service
+      - customer-service
+      - inventory-service
+      - payment-service
+    networks:
+      - rardi-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Apollo Router - GraphQL Gateway
+  apollo-router:
+    image: ghcr.io/apollographql/router:latest
+    container_name: rardi-apollo-router
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./Router/router.yaml:/dist/config/router.yaml
+      - ./Router/supergraph.graphql:/dist/config/supergraph.graphql
+    environment:
+      - APOLLO_ROUTER_CONFIG_PATH=/dist/config/router.yaml
+      - APOLLO_ROUTER_SUPERGRAPH_PATH=/dist/config/supergraph.graphql
+    depends_on:
+      - security-service
+      - customer-service
+      - inventory-service
+      - payment-service
+    networks:
+      - rardi-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Monitoring (optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: rardi-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - rardi-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: rardi-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - rardi-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  rardi-network:
+    driver: bridge
+    name: rardi-network

@@ -22,7 +22,7 @@ public class Query
     /// <summary>
     /// Get user
     /// </summary>
-    [Authorize(Roles = new[] { "Admin" })]
+    [Authorize(Roles = new[] { "Administrator" })]
     public async Task<List<User>> GetUser([Service] ISecurityService securityService)
     {
         return await securityService.GetAllUsers();

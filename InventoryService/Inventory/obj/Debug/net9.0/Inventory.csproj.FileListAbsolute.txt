@@ -185,3 +185,9 @@ F:\Projects\RardiV2\inventoryservice\inventory\obj\Debug\net9.0\refint\Inventory
 F:\Projects\RardiV2\inventoryservice\inventory\obj\Debug\net9.0\Inventory.pdb
 F:\Projects\RardiV2\inventoryservice\inventory\obj\Debug\net9.0\Inventory.genruntimeconfig.cache
 F:\Projects\RardiV2\inventoryservice\inventory\obj\Debug\net9.0\ref\Inventory.dll
+F:\Projects\RardiV2\inventoryservice\inventory\obj\Debug\net9.0\Inventory.sourcelink.json
+F:\Projects\RardiV2\InventoryService\Inventory\bin\Debug\net9.0\AWSSDK.Core.dll
+F:\Projects\RardiV2\InventoryService\Inventory\bin\Debug\net9.0\AWSSDK.SecretsManager.dll
+F:\Projects\RardiV2\InventoryService\Inventory\bin\Debug\net9.0\AWSSDK.RDS.dll
+F:\Projects\RardiV2\InventoryService\Inventory\bin\Debug\net9.0\Mapster.JsonNet.dll
+F:\Projects\RardiV2\InventoryService\Inventory\bin\Debug\net9.0\Newtonsoft.Json.dll

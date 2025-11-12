@@ -32,6 +32,9 @@ public partial class User : IdentityUser<Guid>, IEquatable<User>
 
     public override bool PhoneNumberConfirmed { get => base.PhoneNumberConfirmed; set => base.PhoneNumberConfirmed = value; }
     public override bool TwoFactorEnabled { get => base.TwoFactorEnabled; set => base.TwoFactorEnabled = value; }
+    [GraphQLIgnore]
+    public Guid LocationId { get; set; }
+    public Location? Location { get; set; }
     public bool Equals(User? other)
     {
         if (other is null) return false;

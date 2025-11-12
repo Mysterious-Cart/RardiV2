@@ -18,7 +18,7 @@ namespace Security.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Security")
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -126,7 +126,7 @@ namespace Security.Migrations
                     b.ToTable("AspNetUserTokens", "Security");
                 });
 
-            modelBuilder.Entity("Security.Asset.Location", b =>
+            modelBuilder.Entity("Security.Data.Location", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -135,6 +135,9 @@ namespace Security.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -188,7 +191,7 @@ namespace Security.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid?>("LocationId")
+                    b.Property<Guid>("LocationId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("LockoutEnabled")
@@ -291,12 +294,16 @@ namespace Security.Migrations
 
             modelBuilder.Entity("Security.Data.User", b =>
                 {
-                    b.HasOne("Security.Asset.Location", null)
+                    b.HasOne("Security.Data.Location", "Location")
                         .WithMany("Users")
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
                 });
 
-            modelBuilder.Entity("Security.Asset.Location", b =>
+            modelBuilder.Entity("Security.Data.Location", b =>
                 {
                     b.Navigation("Users");
                 });

@@ -81,6 +81,7 @@ F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\Rardi.Web.AssemblyInfoInput
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\Rardi.Web.AssemblyInfo.cs
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\Rardi.Web.csproj.CoreCompileInputs.cache
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\Rardi.Web.MvcApplicationPartsAssemblyInfo.cache
+F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\Rardi.Web.sourcelink.json
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\rjimswa.dswa.cache.json
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
@@ -89,6 +90,7 @@ F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\compressed\tzxjg6is5z-jk5eo
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\compressed\0wz98yz2xy-tjzqk7tnel.gz
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\compressed\y71s3w5f9p-zrxbvx041h.gz
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\compressed\xa5fgxnhtc-g1x2ayen6w.gz
+F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\compressed\99k38usz7u-y9wjjswjms.gz
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\staticwebassets.build.json
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\staticwebassets.build.json.cache
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\staticwebassets.development.json
@@ -99,4 +101,8 @@ F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\refint\Rardi.Web.dll
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\Rardi.Web.pdb
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\Rardi.Web.genruntimeconfig.cache
 F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\ref\Rardi.Web.dll
-F:\Projects\RardiV2\rardi\rardi.web\obj\Debug\net9.0\compressed\99k38usz7u-y9wjjswjms.gz
+F:\Projects\RardiV2\rardi\rardi.web\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+F:\Projects\RardiV2\rardi\rardi.web\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+F:\Projects\RardiV2\rardi\rardi.web\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+F:\Projects\RardiV2\rardi\rardi.web\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+F:\Projects\RardiV2\rardi\rardi.web\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll

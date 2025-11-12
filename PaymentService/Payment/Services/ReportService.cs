@@ -13,7 +13,7 @@ public class ReportService(IDbContextFactory<PaymentContext> contextFactory)
     public async Task ShowReportFormatOverviewAsync()
     {
         var transactions = paymentContext.Transactions;
-        var reports =  await (from f in transactions.Include(t => t.Customer)
+        var reports =  await (from f in transactions
                         where f.IsDeleted == false 
                         where f.CreatedAt.Year == DateTime.Now.Year
                         orderby f.CreatedAt.Month ascending
@@ -79,7 +79,7 @@ public class ReportService(IDbContextFactory<PaymentContext> contextFactory)
                                 foreach (var value in i.Transactions)
                                 {
                                     innerTable.Cell().Padding(5).Text(value.CreatedAt.ToString("dd/MM/yyyy")).FontSize(contentfontsize);
-                                    innerTable.Cell().Padding(5).Text(value.Customer.PlateNumber).FontSize(contentfontsize);
+                                    innerTable.Cell().Padding(5).Text(value.PlateNumber).FontSize(contentfontsize);
                                     innerTable.Cell().Padding(5).Text(value.Total.ToString()).FontSize(contentfontsize);
                                 }
 

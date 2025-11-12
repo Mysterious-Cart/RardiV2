@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.RDS" Version="4.0.10.9" />
+    <PackageReference Include="AWSSDK.SecretsManager" Version="4.0.2.2" />
     <PackageReference Include="HotChocolate" Version="15.1.11" />
     <PackageReference Include="HotChocolate.ApolloFederation" Version="15.1.11" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.11" />
@@ -16,6 +18,7 @@
     <PackageReference Include="HotChocolate.Subscriptions.Postgres" Version="15.1.11" />
     <PackageReference Include="Identity" Version="1.0.3" />
     <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Mapster.JsonNet" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />

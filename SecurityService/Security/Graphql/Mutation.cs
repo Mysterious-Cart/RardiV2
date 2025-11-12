@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using HotChocolate.Authorization;
-using Security.Asset;
+using Security.Assets;
 
 namespace Security.Graphql;
 
@@ -9,11 +9,12 @@ public class Mutation
     /// <summary>
     /// Register a new user
     /// </summary>
+    [Authorize(Roles = new[] { "Administrator" })]
     public async Task<AuthPayload> Register(
         [Service] ISecurityService securityService,
         string username,
         string password,
-        string? email = null)
+        Guid locationId)
     {
         try
         {
@@ -21,7 +22,7 @@ public class Mutation
             {
                 return new AuthPayload(false,null, "Username already exists");
             }
-            var userRegistrationResult = await securityService.CreateUser(username, password);
+            var userRegistrationResult = await securityService.CreateUser(username, password, locationId);
             var user = userRegistrationResult.User;
             if (!userRegistrationResult.Succeeded)
             {

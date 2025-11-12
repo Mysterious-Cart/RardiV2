@@ -18,7 +18,10 @@ public class InventoryContext : DbContext
 
         modelBuilder.Entity<ProductEntity>()
             .HasQueryFilter(p => !p.isDeleted);
-
+        modelBuilder.Entity<Supplier>()
+            .HasQueryFilter(s => !s.isDeleted);
+        modelBuilder.Entity<ProductTransfer>()
+            .HasQueryFilter(o => !o.Product!.isDeleted);
         modelBuilder.Entity<ProductProfile>()
             .HasQueryFilter(p => !p.Product!.isDeleted && !p.isDeleted);
         modelBuilder.Entity<ProductSupplierProfiles>()
@@ -31,5 +34,6 @@ public class InventoryContext : DbContext
     public DbSet<ProductProfile> ProductProfiles { get; set; }
     public DbSet<ProductSupplierProfiles> ProductSupplierProfiles { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<ProductTransfer> ProductTransfers { get; set; }
     
 }

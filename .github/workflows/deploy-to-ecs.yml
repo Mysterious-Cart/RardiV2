@@ -1,0 +1,266 @@
+name: Deploy to AWS ECS
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+  ECS_CLUSTER: rardi-cluster
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore RardiV2.sln
+
+    - name: Build solution
+      run: dotnet build RardiV2.sln --no-restore --configuration Release
+
+    - name: Run unit tests
+      run: dotnet test RardiV2.sln --no-build --configuration Release --verbosity normal
+
+  build-and-push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    
+    strategy:
+      matrix:
+        service:
+          - name: security-service
+            path: ./SecurityService
+            dockerfile: ./SecurityService/Dockerfile
+            ecr_repo: rardi-security-service
+          - name: customer-service
+            path: ./CustomerService
+            dockerfile: ./CustomerService/Dockerfile
+            ecr_repo: rardi-customer-service
+          - name: inventory-service
+            path: ./InventoryService
+            dockerfile: ./InventoryService/Dockerfile
+            ecr_repo: rardi-inventory-service
+          - name: payment-service
+            path: ./PaymentService
+            dockerfile: ./PaymentService/Dockerfile
+            ecr_repo: rardi-payment-service
+          - name: rardi-web
+            path: ./Rardi
+            dockerfile: ./Rardi/Dockerfile.web
+            ecr_repo: rardi-web-app
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.ECR_REGISTRY }}/${{ matrix.service.ecr_repo }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix=sha-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ${{ matrix.service.dockerfile }}
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Output image URI
+      run: echo "IMAGE_URI=${{ env.ECR_REGISTRY }}/${{ matrix.service.ecr_repo }}:${{ github.sha }}" >> $GITHUB_OUTPUT
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Deploy Security Service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/security-service-staging.json
+        service: rardi-security-service-staging
+        cluster: ${{ env.ECS_CLUSTER }}-staging
+        wait-for-service-stability: true
+
+    - name: Deploy Customer Service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/customer-service-staging.json
+        service: rardi-customer-service-staging
+        cluster: ${{ env.ECS_CLUSTER }}-staging
+        wait-for-service-stability: true
+
+    - name: Deploy Inventory Service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/inventory-service-staging.json
+        service: rardi-inventory-service-staging
+        cluster: ${{ env.ECS_CLUSTER }}-staging
+        wait-for-service-stability: true
+
+    - name: Deploy Payment Service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/payment-service-staging.json
+        service: rardi-payment-service-staging
+        cluster: ${{ env.ECS_CLUSTER }}-staging
+        wait-for-service-stability: true
+
+    - name: Deploy Web Application
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/rardi-web-staging.json
+        service: rardi-web-staging
+        cluster: ${{ env.ECS_CLUSTER }}-staging
+        wait-for-service-stability: true
+
+    - name: Deploy Apollo Router
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/apollo-router-staging.json
+        service: rardi-apollo-router-staging
+        cluster: ${{ env.ECS_CLUSTER }}-staging
+        wait-for-service-stability: true
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production'
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Deploy Security Service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/security-service-production.json
+        service: rardi-security-service-production
+        cluster: ${{ env.ECS_CLUSTER }}-production
+        wait-for-service-stability: true
+
+    - name: Deploy Customer Service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/customer-service-production.json
+        service: rardi-customer-service-production
+        cluster: ${{ env.ECS_CLUSTER }}-production
+        wait-for-service-stability: true
+
+    - name: Deploy Inventory Service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/inventory-service-production.json
+        service: rardi-inventory-service-production
+        cluster: ${{ env.ECS_CLUSTER }}-production
+        wait-for-service-stability: true
+
+    - name: Deploy Payment Service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/payment-service-production.json
+        service: rardi-payment-service-production
+        cluster: ${{ env.ECS_CLUSTER }}-production
+        wait-for-service-stability: true
+
+    - name: Deploy Web Application
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/rardi-web-production.json
+        service: rardi-web-production
+        cluster: ${{ env.ECS_CLUSTER }}-production
+        wait-for-service-stability: true
+
+    - name: Deploy Apollo Router
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: .aws/task-definitions/apollo-router-production.json
+        service: rardi-apollo-router-production
+        cluster: ${{ env.ECS_CLUSTER }}-production
+        wait-for-service-stability: true
+
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+    
+    steps:
+    - name: Notify Success
+      if: ${{ success() }}
+      run: |
+        echo "🚀 Deployment completed successfully!"
+        # Add notification logic here (Slack, Teams, email, etc.)
+        
+    - name: Notify Failure
+      if: ${{ failure() }}
+      run: |
+        echo "❌ Deployment failed!"
+        # Add notification logic here (Slack, Teams, email, etc.)

@@ -1,0 +1,13 @@
+apiVersion: apollographql.com/v1alpha2
+kind: SupergraphFleet
+metadata:
+  name: FarmerMarket
+spec:
+  replicas: 2
+  schema:
+    graphRef: rardi-iz337hp@current
+  routerConfig:
+    sandbox:
+      enabled: true
+  podTemplate:
+    routerVersion: 2.4.0
