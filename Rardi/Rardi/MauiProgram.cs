@@ -18,7 +18,7 @@ namespace Rardi
 
             // Add device-specific services used by the Rardi.Shared project
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
-            builder.Services.add
+            
             builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG

@@ -1,0 +1,18 @@
+@page "/login"
+
+<MudCard>
+    <MudCardContent>
+        <MudText Typo="Typo.h5">Login Page</MudText>
+    </MudCardContent>
+</MudCard>
+
+@code{
+    [Inject]
+    public RardiAuthenticationStateProvider rardiAuthenticationStateProvider { get; set; }
+
+    public async Task PerformLogin(string jwtToken)
+    {
+        await rardiAuthenticationStateProvider.AuthenticateUser(jwtToken);
+    }
+    
+}

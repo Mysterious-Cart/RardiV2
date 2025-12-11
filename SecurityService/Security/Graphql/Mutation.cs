@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using HotChocolate.Authorization;
 using Security.Assets;
+using Security.Service;
 
 namespace Security.Graphql;
 
@@ -10,7 +11,7 @@ public class Mutation
     /// Register a new user
     /// </summary>
     [Authorize(Roles = new[] { "Administrator" })]
-    public async Task<AuthPayload> Register(
+    public async Task<AuthResult> Register(
         [Service] ISecurityService securityService,
         string username,
         string password,
@@ -20,26 +21,26 @@ public class Mutation
         {
             if(await securityService.GetUserByName(username) is not null)
             {
-                return new AuthPayload(false,null, "Username already exists");
+                return new AuthResult(false,null, "Username already exists");
             }
             var userRegistrationResult = await securityService.CreateUser(username, password, locationId);
             var user = userRegistrationResult.User;
             if (!userRegistrationResult.Succeeded)
             {
-                return new AuthPayload(false, null, userRegistrationResult.Message!);
+                return new AuthResult(false, null, userRegistrationResult.Message!);
             }
-            return new AuthPayload(true, user, "User created successfully");
+            return new AuthResult(true, user, "User created successfully");
         }
         catch (Exception ex)
         {
-            return new AuthPayload(false, null, ex.Message);
+            return new AuthResult(false, null, ex.Message);
         }
     }
 
     /// <summary>
     /// Login user
     /// </summary>
-    public async Task<LoginPayload> Login(
+    public async Task<LoginResult> Login(
         [Service] ISecurityService securityService,
         string username,
         string password,
@@ -51,7 +52,26 @@ public class Mutation
         }
         catch(Exception ex)
         {
-            return new LoginPayload(false, null, null, ex.Message + ex.StackTrace);
+            return new LoginResult(false, null, null, null, ex.Message + ex.StackTrace);
+        }
+    }
+
+    public async Task<bool> RenewToken(
+        [Service] JwtTokenService jwttokenService,
+        ClaimsPrincipal claimPrincipal,
+        string refreshToken,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var UserId = Guid.Parse(claimPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+            ?? throw new ArgumentException("User ID not found in claims"));
+            var token = await jwttokenService.GenerateToken(refreshToken);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
         }
     }
 
@@ -79,7 +99,7 @@ public class Mutation
     }
 
     [Authorize]
-    public async Task<RolePayload> CreateRole(
+    public async Task<RoleResult> CreateRole(
         [Service] ISecurityService securityService,
         string roleName
     )
@@ -87,11 +107,11 @@ public class Mutation
         try
         {
             var role = await securityService.CreateRole(roleName);
-            return new RolePayload(true, role, "Role created successfully");
+            return new RoleResult(true, role, "Role created successfully");
         }
         catch (Exception ex)
         {
-            return new RolePayload(false, null, ex.Message);
+            return new RoleResult(false, null, ex.Message);
         }
         
     }
@@ -101,11 +121,7 @@ public class Mutation
         Guid userId,
         string role)
     {
-        var user = await securityService.GetUserById(userId);
-        if (user == null)
-        {
-            throw new InvalidOperationException("User not found.");
-        }
+        var user = await securityService.GetUserById(userId)??throw new InvalidOperationException("User not found.");
 
         if (role == null)
         {

@@ -61,55 +61,50 @@ public class SecurityService(
         return user != null;
     }
 
-    public async Task<LoginPayload> Login(string username, string password, CancellationToken cancellationToken = default)
+    public async Task<LoginResult> Login(string username, string password, CancellationToken cancellationToken = default)
     {
-/*
-#if DEBUG
-        // Create a test user
-        // This code only runs in debug builds
-        if (username == "admin" && password == "Admin@123")
-        {
-            var (admin, role) = await SeedTestUser(cancellationToken);
-            return new LoginPayload(
-                true,
-                admin,
-                _jwtTokenService.GenerateToken(
-                    admin,
-                    // Role is guaranteed to be not null here
-                    [role.Name!.ToString()]
-                ),
-                "Login successful."
-            );
-        }
-#endif
-*/
         cancellationToken.ThrowIfCancellationRequested();
-
+        // Check if the username already exists
         var user = await _userManager.FindByNameAsync(username);
+        using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        //
         if (user != null && await _userManager.CheckPasswordAsync(user, password))
         {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                // Sign in the user
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                var roles = await GetRolesForUserId(user.Id);
-                var token = _jwtTokenService.GenerateToken(user, roles);
-                return new LoginPayload(true, user, token, "Login successful.");
+                // Get the role for the user
+                var roles = await GetRoles(user.Id);
+                // Generate JWT token
+                var token = await _jwtTokenService.GenerateToken(user.Id, roles);
+                // Generate Refresh Token for the JwtToken
+                var refreshToken = await _jwtTokenService.GenerateRefreshToken(user.Id);
+
+                await transaction.CommitAsync(cancellationToken);
+                return new LoginResult(true, user, token, refreshToken,"Login successful.");
             }
             catch (OperationCanceledException)
             {
+                await transaction.RollbackAsync(cancellationToken);
                 throw;
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync(cancellationToken);
                 _logger.LogError("An error occurred during login for user {username}: {message}. Traces {Traces}", username, ex.Message, ex.StackTrace);
-                return new LoginPayload(false, null, null, "Login failed due to internal error, please retry at other time.");
+                return new LoginResult(false, null, null, null, "Login failed due to internal error, please retry at other time.");
+            }
+            finally
+            {
+                await transaction.DisposeAsync();
             }
 
         }
         else
         {
-            return new LoginPayload(false, null, null, "Invalid username or password.");
+            return new LoginResult(false, null, null, null, "Invalid username or password.");
         }
     }
 
@@ -137,15 +132,13 @@ public class SecurityService(
                 //Create User call Admin 
                 await _userManager.CreateAsync(admin, "Admin@123");
                 //Create Role call Administrator
-                if(!await _roleManager.RoleExistsAsync(AdministratorRole.Name!))
-                {
-                    await _roleManager.CreateAsync(AdministratorRole);
-                }
+                await _roleManager.CreateAsync(AdministratorRole);
                 //Assign Role to User
                 await _userManager.AddToRoleAsync(admin, AdministratorRole.Name);
                 //Sign in the user
                 await _signInManager.SignInAsync(admin, isPersistent: false, "JwtBearer");
-                var token = _jwtTokenService.GenerateToken(admin, [AdministratorRole.Name.ToString()]);
+                //Generate JWT token
+                var token = _jwtTokenService.GenerateToken(admin.Id, [AdministratorRole]);
                 await transaction.CommitAsync();
 
                 var user = await _context.Users.FindAsync(admin.Id) ?? throw new InvalidOperationException("Failed to create user. User not found after creation.");
@@ -202,14 +195,19 @@ public class SecurityService(
     // ==== ROLE METHOD ====
 
     public async Task<List<Role>> GetRoles() => await _roleManager.Roles.ToListAsync();
-    public async Task<List<string>> GetRolesForUserId(Guid userId)
+    public async Task<List<Role>> GetRoles(Guid userId)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
         if (user == null)
         {
             throw new InvalidOperationException("User not found.");
         }
-        var roles = await _userManager.GetRolesAsync(user);
+        var roles = (await _context.Users
+            .Where(ur => ur.Id == user.Id)
+            .Select(ur => ur.Roles)
+            .FirstAsync())
+            .ToList();
+
         return roles?.ToList() ?? [];
     }
 

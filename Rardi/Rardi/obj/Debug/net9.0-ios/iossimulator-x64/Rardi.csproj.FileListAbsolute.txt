@@ -295,7 +295,6 @@ f:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\libxamarin
 f:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\libxamarin-dotnet.dylib
 f:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\Rardi.Shared.dll
 f:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\Rardi.Shared.pdb
-f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\build-signature\signature
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\Rardi.csproj.AssemblyReference.cache
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\rpswa.dswa.cache.json
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\rjimswa.dswa.cache.json
@@ -308,7 +307,6 @@ f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\xa5fgxnhtc-g1x2ayen6w.gz
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\rhy1137ubm-obgb1x923p.gz
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\fvwoso0dbg-2zs5yqkzs1.gz
-f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\9jpflg1ys3-yal4yayowl.gz
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\staticwebassets.build.json
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\staticwebassets.build.json.cache
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\staticwebassets.development.json
@@ -325,7 +323,6 @@ f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\publish\xa5fgxnhtc-g1x2ayen6w.br
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\publish\rhy1137ubm-obgb1x923p.br
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\publish\fvwoso0dbg-2zs5yqkzs1.br
-f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\publish\9jpflg1ys3-yal4yayowl.br
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\staticwebassets.publish.json
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\staticwebassets.publish.endpoints.json
 f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\mauiimage.inputs
@@ -384,3 +381,11 @@ f:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\ref\Rardi.
 F:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\9jpflg1ys3-y9wjjswjms.gz
 F:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\compressed\publish\9jpflg1ys3-y9wjjswjms.br
 F:\Projects\RardiV2\Rardi\Rardi\obj\Debug\net9.0-ios\iossimulator-x64\Rardi.sourcelink.json
+F:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\Microsoft.AspNetCore.Components.Authorization.dll
+F:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\Microsoft.IdentityModel.Abstractions.dll
+F:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\Microsoft.IdentityModel.JsonWebTokens.dll
+F:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\Microsoft.IdentityModel.Logging.dll
+F:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\Microsoft.IdentityModel.Tokens.dll
+F:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\StrawberryShake.Razor.dll
+F:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\System.IdentityModel.Tokens.Jwt.dll
+F:\Projects\RardiV2\Rardi\Rardi\bin\Debug\net9.0-ios\iossimulator-x64\System.Reactive.dll

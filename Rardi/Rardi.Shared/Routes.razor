@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(Layout.MainLayout).Assembly">
@@ -15,7 +17,7 @@
                             <MudAlert Severity="Severity.Error" Class="m-4">
                                 <MudText Typo="Typo.h6">Access Denied</MudText>
                                 <MudText>You don't have permission to access this page.</MudText>
-                                <MudText Typo="Typo.body2">Required roles: @string.Join(", ", context.Roles)</MudText>
+                                <MudText Typo="Typo.body2">Required roles: @string.Join(", ", context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value))</MudText>
                             </MudAlert>
                         </Layout.MainLayout>
                     }

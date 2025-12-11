@@ -5,6 +5,7 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using HotChocolate.Subscriptions;
 using Inventory.Assets.Interface;
+using Inventory.Assets.Domain;
 namespace Inventory.Services;
 
 public class InventoryManagementService(
@@ -133,16 +134,45 @@ public class InventoryManagementService(
         
     }
 
-    public async Task<DTO.Product> UpdateProductStock(Guid productPfpId, int QuantityChange)
+    public async Task<DTO.Product> TakeProduct(Guid productPfpId, int Amount)
     {
         try
         {
-            if(QuantityChange < 0)
+            if (Amount <= 0)
             {
-                throw new ArgumentException("Changes cannot be negative", nameof(QuantityChange));
-            }else if(QuantityChange == 0)
+                throw new ArgumentException("Invalid Amount: {Amount}", Amount.ToString());
+            }
+            var product = await _context.ProductProfiles.Include(i => i.Product).FirstAsync(i => i.Id == productPfpId);
+            if (product.Product is null)
             {
-                throw new ArgumentException("Changes cannot be zero", nameof(QuantityChange));
+                _logger.LogError("Product not found for Product with ID: {ProductProfileId}. Reason: Missing Reference.", productPfpId);
+                throw new NullReferenceException("Product not found for the given ProductProfile. This is most likely result from data inconsistency, missing reference.");
+            }
+
+            product.Quantity += Amount;
+            product.UpdatedAt = DateTime.UtcNow;
+            product.Product.TotalStock += Amount;
+            product.Product.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return product.Adapt<DTO.Product>();
+
+        }
+        catch (Exception ex) when (ex is not ArgumentException)
+        {
+            _logger.LogError(ex, "Error updating product stock");
+            throw;
+        }
+
+    }
+
+    public async Task<Product> ReturnProduct(Guid productPfpId, int Amount)
+    {
+        try
+        {
+            if (Amount <= 0)
+            {
+                throw new ArgumentException("Invalid Amount. Input Value:{Amount}", Amount.ToString());
             }
             var product = await _context.ProductProfiles.Include(i => i.Product).FirstAsync(i => i.Id == productPfpId);
             if (product.Product is null)
@@ -151,20 +181,20 @@ public class InventoryManagementService(
                 throw new NullReferenceException("Product not found for the given ProductProfile. This is most likely result from data inconsistency, missing reference.");
             }
 
-            product.Quantity += QuantityChange;
+            product.Quantity -= Amount;
             product.UpdatedAt = DateTime.UtcNow;
-            product.Product.TotalStock += QuantityChange;
+            product.Product.TotalStock -= Amount;
             product.Product.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            return product.Adapt<DTO.Product>();
+            return product.Adapt<Product>();
 
-        }catch(Exception ex) when (ex is not ArgumentException)
+        }
+        catch (Exception ex) when (ex is not ArgumentException)
         {
             _logger.LogError(ex, "Error updating product stock");
             throw;
         }
-        
     }
 
     public async Task ImportProduct(Guid Product, int Quantity)

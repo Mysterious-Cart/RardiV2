@@ -5,6 +5,8 @@ using System.Text;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication;
 using Security.Data;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace Security.Service;
 
@@ -19,17 +21,19 @@ public class JwtTokenService
 
     private readonly IConfiguration _configuration;
     private readonly JwtSecurityTokenHandler _tokenHandler;
+    private readonly SecurityContext _securityContext;
 
-    private IConfiguration JwtSettings { get; }
-    private char[] PrivateKey { get; }
-    private char[] PublicKey { get; }
-    private JwtTokenServiceOption _options { get; }
-    public JwtTokenService(IConfiguration configuration, Action<JwtTokenServiceOption>? configure = null)
+    private JwtTokenServiceOption Options { get; }
+    private IConfiguration? JwtSettings { get; }
+    private char[]? PrivateKey { get; }
+    private char[]? PublicKey { get; }
+    public JwtTokenService(IDbContextFactory<SecurityContext> securityContextFactory, IConfiguration configuration, Action<JwtTokenServiceOption>? configure = null)
     {
+        _securityContext = securityContextFactory.CreateDbContext();
         _configuration = configuration;
         _tokenHandler = new JwtSecurityTokenHandler();
-        _options = new JwtTokenServiceOption();
-        configure?.Invoke(_options);
+        Options = new JwtTokenServiceOption();
+        configure?.Invoke(Options);
 
         // DEBUG MODE; USE CONFIGURED KEYS
 #if DEBUG
@@ -46,23 +50,45 @@ public class JwtTokenService
 #endif
     }
 
-    public string GenerateToken(User user, IList<string> roles)
+    public async Task<string> GenerateToken(string RefreshToken){
+        var token = _securityContext.RefreshTokens.Select(i => new{i.Token, i.UserId}).FirstOrDefault(rt => rt.Token == RefreshToken)
+        ??throw new ArgumentException("Invalid refresh token");
+        
+        var userFound = await _securityContext.Users.FindAsync(token.UserId) 
+            ??throw new ArgumentException("User not found for the given refresh token");
+
+        var roles = _securityContext.Users.Where(i => i.Id == userFound.Id).Select(i => i.Roles).FirstOrDefault()?.ToList()??[];
+        return await GenerateToken(userFound.Id, roles);
+    }
+    public async Task<string> GenerateToken(Guid userId, IList<Role>? roles)
     {
+        var user = await _securityContext.Users.FindAsync(userId)
+            ?? throw new ArgumentException("User not found for the given user ID");
+        #if DEBUG
         using var _rsa = RSA.Create();
-    
-        if(_options.IsKeyEncrypted && _options.KeyEncryptionPassword != null)
-            _rsa.ImportFromEncryptedPem(PrivateKey, _options.KeyEncryptionPassword.ToCharArray());
-        else if(!_options.IsKeyEncrypted)
+
+        if (Options.IsKeyEncrypted && Options.KeyEncryptionPassword != null)
+            _rsa.ImportFromEncryptedPem(PrivateKey, Options.KeyEncryptionPassword.ToCharArray());
+        else if (!Options.IsKeyEncrypted)
             _rsa.ImportFromPem(PrivateKey);
         else
             throw new ArgumentException("Key is encrypted but no password provided");
         var rsaParams = _rsa.ExportParameters(true);
-        
+
         var key = new RsaSecurityKey(rsaParams)
         {
-            KeyId = GenerateKeyId(PublicKey)
+            KeyId = GenerateKeyId(PublicKey ?? throw new ArgumentException("Public key not found"))
         };
-    
+
+        #endif
+
+        #if !DEBUG
+             var key = new RsaSecurityKey(rsaParams)
+            {
+                KeyId = GenerateKeyId(PublicKey ?? throw new ArgumentException("Public key not found"))
+            };
+        #endif
+
         var credentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
         var now = DateTime.UtcNow;
         var unixTimeSecondsForNow = new DateTimeOffset(now).ToUnixTimeSeconds();
@@ -90,14 +116,14 @@ public class JwtTokenService
             new(ClaimTypes.Name, user.UserName!),
 
         };
-        if(roles is not null && roles.Count > 0)
+        if (roles is not null && roles.Count > 0)
         {
-            foreach (var role in roles) 
+            foreach (var role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim(ClaimTypes.Role, role.Id.ToString()!));
             }
         }
-        
+
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -108,14 +134,14 @@ public class JwtTokenService
             Issuer = JwtSettings["Issuer"],
             Audience = JwtSettings["Audience"],
             SigningCredentials = credentials,
-            
+
         };
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);
         var tokenString = _tokenHandler.WriteToken(token);
-    
+
         return tokenString;
-    }
+    }   
 
     public ClaimsPrincipal? ValidateToken(string token)
     {
@@ -123,9 +149,9 @@ public class JwtTokenService
         {
             using var _rsa = RSA.Create();
         
-            if(_options.IsKeyEncrypted && _options.KeyEncryptionPassword != null)
-                _rsa.ImportFromEncryptedPem(PublicKey, _options.KeyEncryptionPassword.ToCharArray());
-            else if(!_options.IsKeyEncrypted)
+            if(Options.IsKeyEncrypted && Options.KeyEncryptionPassword != null)
+                _rsa.ImportFromEncryptedPem(PublicKey, Options.KeyEncryptionPassword.ToCharArray());
+            else if(!Options.IsKeyEncrypted)
                 _rsa.ImportFromPem(PublicKey); 
             else
                 throw new ArgumentException("Key is encrypted but no password provided");
@@ -156,11 +182,73 @@ public class JwtTokenService
             return null;
         }
     }
-    
-    public async Task GenerateRefreshToken(User user, IAuthenticationService authenticationService)
+
+    public async Task<string> GenerateRefreshToken(Guid userId)
     {
         // Implementation for refresh token generation can be added here
-        await Task.CompletedTask;
+        var randomBytes = new byte[64];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomBytes);
+
+        var refreshToken = Convert.ToBase64String(randomBytes);
+
+        _securityContext.RefreshTokens.Add(new RefreshToken
+        {
+            Token = refreshToken,
+            UserId = userId,
+            ExpiresAt = DateTime.UtcNow.AddDays(_configuration.GetValue<int>("JwtSettings:RefreshTokenExpiration"))
+        });
+
+        await _securityContext.SaveChangesAsync();
+
+        return refreshToken;
+    }
+
+    public async Task<bool> ValidateRefreshToken(Guid userId, string refreshToken)
+    {
+        var token = await _securityContext.RefreshTokens
+            .FirstOrDefaultAsync(rt => rt.UserId == userId && rt.Token == refreshToken);
+
+        if (token == null || !token.IsValid)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<string> RotateRefreshToken(Guid userId, string oldRefreshToken)
+    {
+        var token = await _securityContext.RefreshTokens
+            .FirstOrDefaultAsync(rt => rt.UserId == userId && rt.Token == oldRefreshToken);
+
+        if (token == null || !token.IsValid)
+        {
+            throw new InvalidOperationException("Invalid refresh token.");
+        }
+
+        // Invalidate the old token
+        token.ExpiresAt = DateTime.UtcNow;
+        _securityContext.RefreshTokens.Update(token);
+
+        // Generate a new refresh token
+        var newRefreshToken = await GenerateRefreshToken(userId);
+
+        await _securityContext.SaveChangesAsync();
+
+        return newRefreshToken;
+    }
+
+    public async Task RenewRefreshToken(Guid userId, string refreshToken)
+    {
+        var token = await _securityContext.RefreshTokens
+            .FirstOrDefaultAsync(rt => rt.UserId == userId && rt.Token == refreshToken);
+
+        if (token != null)
+        {
+            _securityContext.RefreshTokens.Remove(token);
+            await _securityContext.SaveChangesAsync();
+        }
     }
 
     /// <summary>
@@ -172,9 +260,9 @@ public class JwtTokenService
         try
         {
             using var rsa = RSA.Create();
-            if (_options.IsKeyEncrypted && _options.KeyEncryptionPassword != null)
-                rsa.ImportFromEncryptedPem(PublicKey, _options.KeyEncryptionPassword.ToCharArray());
-            else if (!_options.IsKeyEncrypted)
+            if (Options.IsKeyEncrypted && Options.KeyEncryptionPassword != null)
+                rsa.ImportFromEncryptedPem(PublicKey, Options.KeyEncryptionPassword.ToCharArray());
+            else if (!Options.IsKeyEncrypted)
                 rsa.ImportFromPem(PublicKey);
             else
                 throw new ArgumentException("Key is encrypted but no password provided");

@@ -43,24 +43,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQcm9kdWN0XERhc2hib2FyZFxQcm9kdWN0TGlzdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[F:/Projects/RardiV2/Rardi/Rardi.Shared/Pages/CustomerList.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ3VzdG9tZXJMaXN0LnJhem9y
+[F:/Projects/RardiV2/Rardi/Rardi.Shared/Pages/CustomerListPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ3VzdG9tZXJMaXN0UGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [F:/Projects/RardiV2/Rardi/Rardi.Shared/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[F:/Projects/RardiV2/Rardi/Rardi.Shared/Pages/Login.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+[F:/Projects/RardiV2/Rardi/Rardi.Shared/Pages/LoginPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5QYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[F:/Projects/RardiV2/Rardi/Rardi.Shared/Pages/ProductDashboard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdERhc2hib2FyZC5yYXpvcg==
+[F:/Projects/RardiV2/Rardi/Rardi.Shared/Pages/ProductDashboardPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdERhc2hib2FyZFBhZ2UucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[F:/Projects/RardiV2/Rardi/Rardi.Shared/Pages/ProductList.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdExpc3QucmF6b3I=
+[F:/Projects/RardiV2/Rardi/Rardi.Shared/Pages/ProductListPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdExpc3RQYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [F:/Projects/RardiV2/Rardi/Rardi.Shared/Pages/RedirectToLogin.razor]

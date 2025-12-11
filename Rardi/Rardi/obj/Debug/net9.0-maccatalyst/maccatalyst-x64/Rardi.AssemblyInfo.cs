@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Rardi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+a65ff283a622cdeee938968e0e8a50b508ccd6ac")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+e7669d411e20825b35677c774cd273455c93d32b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Rardi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Rardi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

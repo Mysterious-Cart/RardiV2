@@ -69,7 +69,7 @@ public class OrderManagementService(
             order.ImportPrice ??= order.ProductProfile.LatestImportPrice;
             order.ProductProfile.LatestImportPrice = order.ImportPrice.Value;
 
-            await _inventoryManagementService.UpdateProductStock(order.ProductProfile.Product.Id, order.Quantity);
+            await _inventoryManagementService.TakeProduct(order.ProductProfile.Product.Id, order.Quantity);
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();

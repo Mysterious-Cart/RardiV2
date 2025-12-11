@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Rardi.Web.Client",
   "resources": {
-    "hash": "sha256-aQvizCpfQ3crE1zCvVb/oSiZae8A0EOK6M7J1bWNK6o=",
+    "hash": "sha256-8WBl9/7wHN06XrpghlDUu1QKLSJrVkwYR+MOinBJWaQ=",
     "fingerprinting": {
       "CodeBeam.MudBlazor.Extensions.j5njct74sx.wasm": "CodeBeam.MudBlazor.Extensions.wasm",
       "CsvHelper.5c97h8cn3b.wasm": "CsvHelper.wasm",
@@ -12,6 +12,7 @@
       "HotChocolate.Buffers.dtiq76ae6w.wasm": "HotChocolate.Buffers.wasm",
       "Microsoft.AspNetCore.Authorization.tnyc7xpluy.wasm": "Microsoft.AspNetCore.Authorization.wasm",
       "Microsoft.AspNetCore.Components.t32damlu4o.wasm": "Microsoft.AspNetCore.Components.wasm",
+      "Microsoft.AspNetCore.Components.Authorization.5ja82b9mxc.wasm": "Microsoft.AspNetCore.Components.Authorization.wasm",
       "Microsoft.AspNetCore.Components.Forms.up1bcx14yi.wasm": "Microsoft.AspNetCore.Components.Forms.wasm",
       "Microsoft.AspNetCore.Components.Web.ip3tel2wdp.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
       "Microsoft.AspNetCore.Components.WebAssembly.grj5cmg1s5.wasm": "Microsoft.AspNetCore.Components.WebAssembly.wasm",
@@ -230,10 +231,10 @@
       "icudt_CJK.tjcz0u77k5.dat": "icudt_CJK.dat",
       "icudt_EFIGS.tptq2av103.dat": "icudt_EFIGS.dat",
       "icudt_no_CJK.lfu7j35m59.dat": "icudt_no_CJK.dat",
-      "Rardi.Shared.yc9rnh96xb.wasm": "Rardi.Shared.wasm",
-      "Rardi.Shared.eqvfkab59w.pdb": "Rardi.Shared.pdb",
-      "Rardi.Web.Client.yjooi6iru3.wasm": "Rardi.Web.Client.wasm",
-      "Rardi.Web.Client.ec82ogz9x6.pdb": "Rardi.Web.Client.pdb"
+      "Rardi.Shared.v2fgkxgui3.wasm": "Rardi.Shared.wasm",
+      "Rardi.Shared.y5qtfx6wu8.pdb": "Rardi.Shared.pdb",
+      "Rardi.Web.Client.wsetd0jjhq.wasm": "Rardi.Web.Client.wasm",
+      "Rardi.Web.Client.jmgm8m6n3c.pdb": "Rardi.Web.Client.pdb"
     },
     "jsModuleNative": {
       "dotnet.native.l4ptthxatg.js": "sha256-ddUN4+taa/Qv7Mr8mLpunJO+0Xw3ViOqBvedhe57/hA="
@@ -263,6 +264,7 @@
       "HotChocolate.Buffers.dtiq76ae6w.wasm": "sha256-P7+V4u3+En3SoJGge/ON0RAOqjqQjP+s3KMdwfu4i5U=",
       "Microsoft.AspNetCore.Authorization.tnyc7xpluy.wasm": "sha256-h2pKkq57/vS3mbEFyiqoupHb66C30OMHzjlzDqfbD40=",
       "Microsoft.AspNetCore.Components.t32damlu4o.wasm": "sha256-6X0P9WizrWIhvvQG4Dceipzc7UdF1QjvXKoTLrIrvkQ=",
+      "Microsoft.AspNetCore.Components.Authorization.5ja82b9mxc.wasm": "sha256-r7rvOIT/7U2j/hWzOguOLut5faxH/7SHPfhDI2qDyfU=",
       "Microsoft.AspNetCore.Components.Forms.up1bcx14yi.wasm": "sha256-cp3828JD1TdnmZ6g3GEfXKayNKd2ljfibH3wdg6t3n0=",
       "Microsoft.AspNetCore.Components.Web.ip3tel2wdp.wasm": "sha256-+uXtoXpMFQKIFs1SOag/WdIbA4G4Q4eGRRGFCiXIBdU=",
       "Microsoft.AspNetCore.Components.WebAssembly.grj5cmg1s5.wasm": "sha256-tChPBLUd3b2CpuaUBQ2hV/OoJbb5XPFpVtYTXo46Y+o=",
@@ -472,12 +474,12 @@
       "WindowsBase.ahs9krftg4.wasm": "sha256-bgi2FHdT0ABsUP1yKQQ2AP8qfo1V/bS/4cJFE4OUHX8=",
       "mscorlib.k5iaovx9v7.wasm": "sha256-mEFLDERlY1HMNQHzh68xOPawXvI48O1fHW9PbfXugb4=",
       "netstandard.6sr1qvn64m.wasm": "sha256-Gpf+qEqCYaCB6zqI5sNPIurnfpwRtfcWksgf3CW6mHE=",
-      "Rardi.Shared.yc9rnh96xb.wasm": "sha256-3iyAYExz1JuqZkLkHXLfVgAx65hSw24XbBOvWGB76ec=",
-      "Rardi.Web.Client.yjooi6iru3.wasm": "sha256-smNHIeHAk9XtAoeK41rr0vGtIHC/L86r0xI0rfdV7ng="
+      "Rardi.Shared.v2fgkxgui3.wasm": "sha256-qRd6S3XHJzGA7lxinQXKIrqJLBsfHqfw0zvuKEZymJs=",
+      "Rardi.Web.Client.wsetd0jjhq.wasm": "sha256-0PLXLp+ydBukY1ajqQLixJGfpdwLkaeUFIWKgdIpNBY="
     },
     "pdb": {
-      "Rardi.Shared.eqvfkab59w.pdb": "sha256-ZjpcDmhJwf42ZqJ25V3VQXbKrreIoTLuABwFLa9EgT0=",
-      "Rardi.Web.Client.ec82ogz9x6.pdb": "sha256-vl4buTQwEXVkG/djMareI5dysFaJi0Ld2aqYONt2Plc="
+      "Rardi.Shared.y5qtfx6wu8.pdb": "sha256-thwlY/GLnKQ7Q20cWJqTVsTM/pkiGDbGdJ1qiZExOGo=",
+      "Rardi.Web.Client.jmgm8m6n3c.pdb": "sha256-qz2sOq46DMAYMe6RDtInN9EwyRsxAl9qcj+rxZVs3CY="
     }
   },
   "cacheBootResources": true,

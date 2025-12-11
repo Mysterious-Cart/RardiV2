@@ -142,6 +142,18 @@
         }
       },
       "Microsoft.AspNetCore.Components.Analyzers/9.0.8": {},
+      "Microsoft.AspNetCore.Components.Authorization/9.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Authorization": "9.0.8",
+          "Microsoft.AspNetCore.Components": "9.0.8"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Components.Authorization.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52903"
+          }
+        }
+      },
       "Microsoft.AspNetCore.Components.Forms/9.0.8": {
         "dependencies": {
           "Microsoft.AspNetCore.Components": "9.0.8"
@@ -509,6 +521,47 @@
         "native": {
           "runtimes/win-x64/native/Microsoft.Graphics.Canvas.dll": {
             "fileVersion": "1.3.2.0"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Abstractions/8.2.1": {
+        "runtime": {
+          "lib/net9.0/Microsoft.IdentityModel.Abstractions.dll": {
+            "assemblyVersion": "8.2.1.0",
+            "fileVersion": "8.2.1.51115"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.JsonWebTokens/8.2.1": {
+        "dependencies": {
+          "Microsoft.IdentityModel.Tokens": "8.2.1"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+            "assemblyVersion": "8.2.1.0",
+            "fileVersion": "8.2.1.51115"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Logging/8.2.1": {
+        "dependencies": {
+          "Microsoft.IdentityModel.Abstractions": "8.2.1"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.IdentityModel.Logging.dll": {
+            "assemblyVersion": "8.2.1.0",
+            "fileVersion": "8.2.1.51115"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Tokens/8.2.1": {
+        "dependencies": {
+          "Microsoft.IdentityModel.Logging": "8.2.1"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.IdentityModel.Tokens.dll": {
+            "assemblyVersion": "8.2.1.0",
+            "fileVersion": "8.2.1.51115"
           }
         }
       },
@@ -880,9 +933,12 @@
           }
         }
       },
-      "StrawberryShake/15.1.11": {
+      "StrawberryShake.Blazor/15.1.11": {
         "dependencies": {
-          "StrawberryShake.Core": "15.1.11"
+          "StrawberryShake.Core": "15.1.11",
+          "StrawberryShake.Razor": "15.1.11",
+          "StrawberryShake.Transport.Http": "15.1.11",
+          "StrawberryShake.Transport.WebSockets": "15.1.11"
         }
       },
       "StrawberryShake.Core/15.1.11": {
@@ -902,6 +958,19 @@
           "StrawberryShake.Core": "15.1.11",
           "StrawberryShake.Transport.Http": "15.1.11",
           "StrawberryShake.Transport.WebSockets": "15.1.11"
+        }
+      },
+      "StrawberryShake.Razor/15.1.11": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Components.Web": "9.0.8",
+          "StrawberryShake.Core": "15.1.11",
+          "System.Reactive": "6.0.0"
+        },
+        "runtime": {
+          "lib/net9.0/StrawberryShake.Razor.dll": {
+            "assemblyVersion": "15.1.11.0",
+            "fileVersion": "15.1.11.0"
+          }
         }
       },
       "StrawberryShake.Resources/15.1.11": {
@@ -941,7 +1010,27 @@
           }
         }
       },
+      "System.IdentityModel.Tokens.Jwt/8.2.1": {
+        "dependencies": {
+          "Microsoft.IdentityModel.JsonWebTokens": "8.2.1",
+          "Microsoft.IdentityModel.Tokens": "8.2.1"
+        },
+        "runtime": {
+          "lib/net9.0/System.IdentityModel.Tokens.Jwt.dll": {
+            "assemblyVersion": "8.2.1.0",
+            "fileVersion": "8.2.1.51115"
+          }
+        }
+      },
       "System.IO.Pipelines/9.0.2": {},
+      "System.Reactive/6.0.0": {
+        "runtime": {
+          "lib/net6.0-windows10.0.19041/System.Reactive.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.0.1"
+          }
+        }
+      },
       "ZXing.Net/0.16.9": {
         "runtime": {
           "lib/net7.0/zxing.dll": {
@@ -953,9 +1042,11 @@
       "Rardi.Shared/1.0.0": {
         "dependencies": {
           "CodeBeam.MudBlazor.Extensions": "8.2.4",
-          "Microsoft.AspNetCore.Components.Web": "9.0.8",
+          "Microsoft.AspNetCore.Components.Authorization": "9.0.0",
           "MudBlazor": "8.13.0",
-          "StrawberryShake": "15.1.11"
+          "StrawberryShake.Blazor": "15.1.11",
+          "StrawberryShake.Transport.Http": "15.1.11",
+          "System.IdentityModel.Tokens.Jwt": "8.2.1"
         },
         "runtime": {
           "Rardi.Shared.dll": {
@@ -1061,6 +1152,13 @@
       "sha512": "sha512-uRx+7E0/nKIbQ0yG2/TYr6RYqeVanWwAVdwzzffGvTyI/jZBE3YT9aJ9c0DGrhgvkDZPzH1Z4ryp6LdMmBJFAQ==",
       "path": "microsoft.aspnetcore.components.analyzers/9.0.8",
       "hashPath": "microsoft.aspnetcore.components.analyzers.9.0.8.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Components.Authorization/9.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-LD5ApnnUgMAyFDMKXqhyKFksnnxicGxE15dvC6rnOynFzj11Rvf7bENjTP9HUIbD64MYug+wlhl06A4nicw+RQ==",
+      "path": "microsoft.aspnetcore.components.authorization/9.0.0",
+      "hashPath": "microsoft.aspnetcore.components.authorization.9.0.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Components.Forms/9.0.8": {
       "type": "package",
@@ -1279,6 +1377,34 @@
       "path": "microsoft.graphics.win2d/1.3.2",
       "hashPath": "microsoft.graphics.win2d.1.3.2.nupkg.sha512"
     },
+    "Microsoft.IdentityModel.Abstractions/8.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8sMlmHhh5HdP3+yCSCUpJpN1yYrJ6J/V39df9siY8PeMckRMrSBRL/TMs/Jex6P1ly/Ie2mFqvhcPHHrNmCd/w==",
+      "path": "microsoft.identitymodel.abstractions/8.2.1",
+      "hashPath": "microsoft.identitymodel.abstractions.8.2.1.nupkg.sha512"
+    },
+    "Microsoft.IdentityModel.JsonWebTokens/8.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Oo0SBOzK6p3YIUcc1YTJCaYezVUa5HyUJ/AAB35QwxhhD6Blei5tNjNYDR0IbqHdb5EPUIiKcIbQGoj2b1mIbg==",
+      "path": "microsoft.identitymodel.jsonwebtokens/8.2.1",
+      "hashPath": "microsoft.identitymodel.jsonwebtokens.8.2.1.nupkg.sha512"
+    },
+    "Microsoft.IdentityModel.Logging/8.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EgSEAtBoWBynACdhKnMlVAFGGWqOIdmbpW7Vvx2SQ7u7ogZ50NcEGSoGljEsQoGIRYpo0UxXYktKcYMp+G/Bcg==",
+      "path": "microsoft.identitymodel.logging/8.2.1",
+      "hashPath": "microsoft.identitymodel.logging.8.2.1.nupkg.sha512"
+    },
+    "Microsoft.IdentityModel.Tokens/8.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oQeLWCATuVXOCdIvouM4GG2xl1YNng+uAxYwu7CG6RuW+y+1+slXrOBq5csTU2pnV2SH3B1GmugDf6Jv/lexjw==",
+      "path": "microsoft.identitymodel.tokens/8.2.1",
+      "hashPath": "microsoft.identitymodel.tokens.8.2.1.nupkg.sha512"
+    },
     "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
       "type": "package",
       "serviceable": true,
@@ -1391,12 +1517,12 @@
       "path": "mudblazor/8.13.0",
       "hashPath": "mudblazor.8.13.0.nupkg.sha512"
     },
-    "StrawberryShake/15.1.11": {
+    "StrawberryShake.Blazor/15.1.11": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-naNiZlkTH8bVQf64fhQ6oPouSj3Ii/fdDisNG0HapSD5P7FRyziLbcttgNqD4ZcbXjvjXticpsHZqJo9EQBBLw==",
-      "path": "strawberryshake/15.1.11",
-      "hashPath": "strawberryshake.15.1.11.nupkg.sha512"
+      "sha512": "sha512-iz+i/TWPXmPYi7XRnGht36/fCupJ8s2J4J/8jY8fPaKS//iRGXzwyCojt9m4EQFnLGbefEHDImXIpPjM/K94hg==",
+      "path": "strawberryshake.blazor/15.1.11",
+      "hashPath": "strawberryshake.blazor.15.1.11.nupkg.sha512"
     },
     "StrawberryShake.Core/15.1.11": {
       "type": "package",
@@ -1411,6 +1537,13 @@
       "sha512": "sha512-IEEDeJzHVGNSev19Yak6I12FMbcZnkTK7DKm2fjxPwokH9bmE2pzeZXxcoUp9acArmAHdQPLqQ7gPXnK2LmtQw==",
       "path": "strawberryshake.maui/15.1.11",
       "hashPath": "strawberryshake.maui.15.1.11.nupkg.sha512"
+    },
+    "StrawberryShake.Razor/15.1.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-joHYmcyaCL3PuomyrzKfgmxarJiVT8QQsDfVZz7dllhI3JYxYP8R2P0Av0s3OlRo/IMz3f6FA+LjbkZFrffWLQ==",
+      "path": "strawberryshake.razor/15.1.11",
+      "hashPath": "strawberryshake.razor.15.1.11.nupkg.sha512"
     },
     "StrawberryShake.Resources/15.1.11": {
       "type": "package",
@@ -1433,12 +1566,26 @@
       "path": "strawberryshake.transport.websockets/15.1.11",
       "hashPath": "strawberryshake.transport.websockets.15.1.11.nupkg.sha512"
     },
+    "System.IdentityModel.Tokens.Jwt/8.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-GVQmbjr2N8awFWPTWyThLxgKnFINObG1P+oX7vFrBY8um3V7V7Dh3wnxaGxNH6v6lSTeVQrY+SaUUBX9H3TPcw==",
+      "path": "system.identitymodel.tokens.jwt/8.2.1",
+      "hashPath": "system.identitymodel.tokens.jwt.8.2.1.nupkg.sha512"
+    },
     "System.IO.Pipelines/9.0.2": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-UIBaK7c/A3FyQxmX/747xw4rCUkm1BhNiVU617U5jweNJssNjLJkPUGhBsrlDG0BpKWCYKsncD+Kqpy4KmvZZQ==",
       "path": "system.io.pipelines/9.0.2",
       "hashPath": "system.io.pipelines.9.0.2.nupkg.sha512"
+    },
+    "System.Reactive/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-31kfaW4ZupZzPsI5PVe77VhnvFF55qgma7KZr/E0iFTs6fmdhhG8j0mgEx620iLTey1EynOkEfnyTjtNEpJzGw==",
+      "path": "system.reactive/6.0.0",
+      "hashPath": "system.reactive.6.0.0.nupkg.sha512"
     },
     "ZXing.Net/0.16.9": {
       "type": "package",

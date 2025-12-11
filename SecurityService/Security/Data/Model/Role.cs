@@ -15,4 +15,6 @@ public class Role : IdentityRole<Guid>
     [TypeConverter(typeof(GuidConverter))]
     public override Guid Id { get => base.Id; set => base.Id = value; }
 
+    public ICollection<User> Users { get; set; } = [];
+
 }

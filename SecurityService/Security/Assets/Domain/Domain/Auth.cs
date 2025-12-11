@@ -16,8 +16,9 @@ public abstract record PayloadBase
 /// <summary>
 /// Authentication response payload
 /// </summary>
-public record AuthPayload(bool Success, User? User, string Message) : PayloadBase(Success, Message);
-public record RolePayload(bool Success, Role? Role, string Message) : PayloadBase(Success, Message);
-public record UserPayload(bool Success, User? User, string Message) : PayloadBase(Success, Message);
-public record LoginPayload(bool Success, User? User, string? Token, string Message) : PayloadBase(Success, Message);
-public record UserRegistrationResult(bool Succeeded, User? User, string? Message) : PayloadBase(Succeeded, Message);
+public record AuthResult(bool Success, User? User, string Message) : PayloadBase(Success, Message);
+public record RoleResult(bool Success, Role? Role, string Message) : PayloadBase(Success, Message);
+public record UserResult(bool Success, User? User, string Message) : PayloadBase(Success, Message);
+public record LoginResult(bool Success, User? User, string? Token,string? RefreshToken, string Message) : PayloadBase(Success, Message);
+public record UserRegistrationResult(bool Succeeded, User? User, string Message) : PayloadBase(Succeeded, Message);
+public record RefreshTokenRenewResult(bool Succeeded, string? Token, string? RefreshToken);

@@ -7,6 +7,7 @@ using MudBlazor.Services;
 
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Rardi.Shared.Assets;
+using Microsoft.AspNetCore.Components.Authorization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -20,8 +21,7 @@ builder.Services.AddMudServices();
 builder.Services.AddRardiClient();
 builder.Services.AddScoped(sp => new HttpClient());
 builder.Services.AddScoped<AppService>();
-builder.Services.AddAuthenticationCore();
-builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddRardiAuthentication();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

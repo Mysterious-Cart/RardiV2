@@ -9,6 +9,7 @@
       "Rardi.Shared/1.0.0": {
         "dependencies": {
           "CodeBeam.MudBlazor.Extensions": "8.2.4",
+          "Microsoft.AspNetCore.Components.Authorization": "9.0.0",
           "MudBlazor": "8.13.0",
           "StrawberryShake.Blazor": "15.1.11",
           "StrawberryShake.Transport.Http": "15.1.11",
@@ -125,6 +126,18 @@
         }
       },
       "Microsoft.AspNetCore.Components.Analyzers/9.0.7": {},
+      "Microsoft.AspNetCore.Components.Authorization/9.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Authorization": "9.0.7",
+          "Microsoft.AspNetCore.Components": "9.0.7"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Components.Authorization.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52903"
+          }
+        }
+      },
       "Microsoft.AspNetCore.Components.Forms/9.0.7": {
         "dependencies": {
           "Microsoft.AspNetCore.Components": "9.0.7"
@@ -609,6 +622,13 @@
       "sha512": "sha512-SlMcfUJHFxjIFAecPY55in8u93AZo5NQrRlPY3hKrSsLEgyjjtZGzWIn+F9RluHw5wRct/QFRCt2sQwEhn8qtA==",
       "path": "microsoft.aspnetcore.components.analyzers/9.0.7",
       "hashPath": "microsoft.aspnetcore.components.analyzers.9.0.7.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Components.Authorization/9.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-LD5ApnnUgMAyFDMKXqhyKFksnnxicGxE15dvC6rnOynFzj11Rvf7bENjTP9HUIbD64MYug+wlhl06A4nicw+RQ==",
+      "path": "microsoft.aspnetcore.components.authorization/9.0.0",
+      "hashPath": "microsoft.aspnetcore.components.authorization.9.0.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Components.Forms/9.0.7": {
       "type": "package",

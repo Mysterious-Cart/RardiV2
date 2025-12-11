@@ -1,23 +1,23 @@
 {
   "Files": [
     {
-      "Id": "F:\\Projects\\RardiV2\\rardi\\Rardi.Shared\\obj\\Debug\\net9.0\\scopedcss\\projectbundle\\Rardi.Shared.bundle.scp.css",
+      "Id": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\obj\\Debug\\net9.0\\scopedcss\\projectbundle\\Rardi.Shared.bundle.scp.css",
       "PackagePath": "staticwebassets\\Rardi.Shared.5ndxwgt9bt.bundle.scp.css"
     },
     {
-      "Id": "F:\\Projects\\RardiV2\\rardi\\Rardi.Shared\\wwwroot\\app.css",
+      "Id": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\wwwroot\\app.css",
       "PackagePath": "staticwebassets\\app.css"
     },
     {
-      "Id": "F:\\Projects\\RardiV2\\rardi\\Rardi.Shared\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Id": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\wwwroot\\bootstrap\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Id": "F:\\Projects\\RardiV2\\rardi\\Rardi.Shared\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Id": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "F:\\Projects\\RardiV2\\rardi\\Rardi.Shared\\wwwroot\\favicon.png",
+      "Id": "F:\\Projects\\RardiV2\\Rardi\\Rardi.Shared\\wwwroot\\favicon.png",
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
